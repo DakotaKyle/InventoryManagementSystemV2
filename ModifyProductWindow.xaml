@@ -1,0 +1,369 @@
+﻿<Window x:Class="InventoryManagementSystem.ModifyProductWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:InventoryManagementSystem"
+        mc:Ignorable="d"
+        Title="Product" Height="800" Width="1200">
+
+    <Grid>
+
+        <Grid.ColumnDefinitions>
+
+            <ColumnDefinition Width="107*"/>
+            <ColumnDefinition Width="293*"/>
+
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+
+            <RowDefinition Height="320*"/>
+            <RowDefinition Height="395*"/>
+
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Column="0" Grid.Row="0">
+
+            <Label x:Name="WindowNameLabel"
+                   
+                   HorizontalAlignment="Left"
+                   VerticalAlignment="Top"
+                   Content="Modify Product"
+                   FontFamily="Times New Roman"
+                   FontSize="20"
+                   Margin="50,20,0,0">
+
+            </Label>
+
+        </StackPanel>
+
+        <StackPanel Grid.Column="1" Grid.Row="0">
+
+            <Label x:Name="AllPartsLabel"
+                   
+                   HorizontalAlignment="Left"
+                   VerticalAlignment="Top"
+                   Content="All Parts"
+                   FontFamily="Times New Roman"
+                   FontSize="16"
+                   Margin="25,25,0,0"
+>
+
+            </Label>
+
+            <Button x:Name="AllPartSearchButton"
+                    
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Top"
+                    Content="Search"
+                    FontFamily="Times New Roman"
+                    FontSize="16"
+                    Width="60"
+                    Height="25"
+                    Margin="0,-50,0,0"
+                    Click="AllPartSearchButton_Click"
+                    Cursor="Hand">
+
+            </Button>
+
+            <TextBox x:Name="AllPartsTextBox"
+                     
+                     HorizontalAlignment="Center"
+                     VerticalAlignment="Top"
+                     FontFamily="Times New Roman"
+                     FontSize="16"
+                     Width="240"
+                     Height="30"
+                     Margin="350,-50,0,0">
+
+            </TextBox>
+
+            <DataGrid x:Name="AllPartsDataGrid" AutoGenerateColumns="False"
+                      
+                      FontFamily="Times New Roman"
+                      FontSize="16"
+                      Height="250"
+                      Margin="0,0,5,0"
+                      IsReadOnly="True">
+
+                <DataGrid.Columns>
+
+                    <DataGridTextColumn Header="Part ID" FontFamily="Times New Roman" Width="75*" Binding="{Binding Path=PartID}"/>
+                    <DataGridTextColumn Header="Name" FontFamily="Times New Roman" Width="75*" Binding="{Binding Path=Name}"/>
+                    <DataGridTextColumn Header="Inventory" FontFamily="Times New Roman" Width="95*" Binding="{Binding Path=Instock}"/>
+                    <DataGridTextColumn Header="Price" FontFamily="Times New Roman" Width="75*" Binding="{Binding Path=Price}"/>
+                    <DataGridTextColumn Header="Min" FontFamily="Times New Roman" Width="75*" Binding="{Binding Path=Min}"/>
+                    <DataGridTextColumn Header="Max" FontFamily="Times New Roman" Width="75*" Binding="{Binding Path=Max}"/>
+
+                </DataGrid.Columns>
+
+            </DataGrid>
+
+            <Button x:Name="AllPartsAddButton"
+                    
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Content="Add"
+                    FontFamily="Times New Roman"
+                    FontSize="16"
+                    Width="45"
+                    Height="30"
+                    Margin="0,8,50,0"
+                    Click="AllPartsAddButton_Click"
+                    Cursor="Hand">
+            </Button>
+
+        </StackPanel>
+
+        <StackPanel Grid.Column="1" Grid.Row="1">
+
+            <Label x:Name="ProductPartsLabel"
+                   
+                   HorizontalAlignment="Left"
+                   VerticalAlignment="Top"
+                   Content="Parts Associated with this Product"
+                   FontFamily="Times New Roman"
+                   FontSize="16"
+                   Margin="15,25,0,0">
+
+            </Label>
+
+            <Button x:Name="ProductSearchButton"
+                    
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Top"
+                    Content="Search"
+                    FontFamily="Times New Roman"
+                    FontSize="16"
+                    Width="60"
+                    Height="25"
+                    Margin="0,-50,0,0"
+                    Click="ProductSearchButton_Click"
+                    Cursor="Hand">
+            </Button>
+
+            <TextBox x:Name="ProductSearchTextBox"
+                     
+                     HorizontalAlignment="Center"
+                   VerticalAlignment="Top"
+                     FontFamily="Times New Roman"
+                     FontSize="16"
+                     Width="240"
+                     Height="30"
+                     Margin="350,-50,0,0">
+
+            </TextBox>
+
+            <DataGrid x:Name="ProductDataGrid" AutoGenerateColumns="False"
+                      
+                      FontFamily="Times New Roman"
+                      FontSize="16"
+                      Height="250"
+                      Margin="0,0,5,0"
+                      IsReadOnly="True">
+
+                <DataGrid.Columns>
+
+                    <DataGridTextColumn Header="Part ID" FontFamily="Times New Roman" Width="75*" Binding="{Binding Path=PartID}"/>
+                    <DataGridTextColumn Header="Name" FontFamily="Times New Roman" Width="75*" Binding="{Binding Path=Name}"/>
+                    <DataGridTextColumn Header="Inventory" FontFamily="Times New Roman" Width="95*" Binding="{Binding Path=Instock}"/>
+                    <DataGridTextColumn Header="Price" FontFamily="Times New Roman" Width="75*" Binding="{Binding Path=Price}"/>
+                    <DataGridTextColumn Header="Min" FontFamily="Times New Roman" Width="75*" Binding="{Binding Path=Min}"/>
+                    <DataGridTextColumn Header="Max" FontFamily="Times New Roman" Width="75*" Binding="{Binding Path=Max}"/>
+
+                </DataGrid.Columns>
+
+            </DataGrid>
+
+            <Button x:Name="ProductDeleteButton"
+                    
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Content="Delete"
+                    FontFamily="Times New Roman"
+                    FontSize="16"
+                    Width="60"
+                    Height="30"
+                    Margin="0,8,50,0"
+                    Click="ProductDeleteButton_Click"
+                    Cursor="Hand">
+            </Button>
+
+            <Button x:Name="CancelButton"
+                    
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Bottom"
+                    Content="Cancel"
+                    FontFamily="Times New Roman"
+                    FontSize="16"
+                    Width="60"
+                    Height="30"
+                    Margin="0,20,0,0"
+                    Click="CancelButton_Click"
+                    Cursor="Hand">
+            </Button>
+
+            <Button x:Name="SaveButton"
+                    
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Bottom"
+                    Content="Save"
+                    FontFamily="Times New Roman"
+                    FontSize="16"
+                    Width="60"
+                    Height="30"
+                    Margin="-150,-30,0,0"
+                    Click="SaveButton_Click"
+                    Cursor="Hand">
+
+            </Button>
+        </StackPanel>
+
+        <StackPanel Grid.Column="0" Grid.Row="1">
+
+            <Label x:Name="IdLabel"
+                   
+                   Content="ID"
+                   HorizontalAlignment="Left"
+                   VerticalAlignment="Top"
+                   FontFamily="Times New Roman"
+                   FontSize="16"
+                   Margin="25,0,0,0">
+
+            </Label>
+
+            <Label x:Name="NameLabel"
+                   
+                   Content="Name"
+                   HorizontalAlignment="Left"
+                   VerticalAlignment="Top"
+                   FontFamily="Times New Roman"
+                   FontSize="16"
+                   Margin="25,10,0,0">
+
+            </Label>
+
+            <Label x:Name="InventoryLabel"
+                   
+                   Content="Inventory"
+                   HorizontalAlignment="Left"
+                   VerticalAlignment="Top"
+                   FontFamily="Times New Roman"
+                   FontSize="16"
+                   Margin="25,10,0,0">
+
+            </Label>
+
+            <Label x:Name="PriceLabel"
+                   
+                   Content="Price"
+                   HorizontalAlignment="Left"
+                   VerticalAlignment="Top"
+                   FontFamily="Times New Roman"
+                   FontSize="16"
+                   Margin="25,10,0,0">
+
+            </Label>
+
+            <Label x:Name="MaxLabel"
+                   
+                   Content="Max"
+                   HorizontalAlignment="Left"
+                   VerticalAlignment="Top"
+                   FontFamily="Times New Roman"
+                   FontSize="16"
+                   Margin="25,10,0,0">
+
+            </Label>
+
+            <TextBox x:Name="IdTextBox"
+                     
+                     IsEnabled="False"
+                     HorizontalAlignment="Center"
+                     VerticalAlignment="Top"
+                     FontFamily="Times New Roman"
+                     FontSize="16"
+                     Width="120"
+                     Height="20"
+                     Margin="0,-177,0,0"
+                     >
+
+            </TextBox>
+
+            <TextBox x:Name="NameTextBox"
+                     
+                     HorizontalAlignment="Center"
+                     VerticalAlignment="Top"
+                     FontFamily="Times New Roman"
+                     FontSize="16"
+                     Width="120"
+                     Height="20"
+                     Margin="0,-140,0,0">
+
+            </TextBox>
+
+            <TextBox x:Name="InventoryTextBox"
+                     
+                     HorizontalAlignment="Center"
+                     VerticalAlignment="Top"
+                     FontFamily="Times New Roman"
+                     FontSize="16"
+                     Width="120"
+                     Height="20"
+                     Margin="0,-100,0,0">
+
+            </TextBox>
+
+            <TextBox x:Name="PriceTextBox"
+                     
+                     HorizontalAlignment="Center"
+                     VerticalAlignment="Top"
+                     FontFamily="Times New Roman"
+                     FontSize="16"
+                     Width="120"
+                     Height="20"
+                     Margin="0,-60,0,0">
+
+            </TextBox>
+
+            <TextBox x:Name="MaxTextBox"
+                     
+                     HorizontalAlignment="Left"
+                     VerticalAlignment="Top"
+                     FontFamily="Times New Roman"
+                     FontSize="16"
+                     Width="75"
+                     Height="20"
+                     Margin="75,-25,0,0">
+
+            </TextBox>
+
+            <Label x:Name="MinLabel"
+                   
+                   HorizontalAlignment="Left"
+                   VerticalAlignment="Top"
+                   Content="Min"
+                   FontFamily="Times New Roman"
+                   FontSize="16"
+                   Width="104"
+                   Margin="175,-29,0,0">
+
+            </Label>
+
+            <TextBox x:Name="MinTextBox"
+                     
+                     HorizontalAlignment="Left"
+                     VerticalAlignment="Top"
+                     FontFamily="Times New Roman"
+                     FontSize="16"
+                     Width="75"
+                     Height="20"
+                     Margin="220,-25,0,0">
+
+            </TextBox>
+
+        </StackPanel>
+
+    </Grid>
+</Window>
