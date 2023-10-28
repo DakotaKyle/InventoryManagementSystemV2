@@ -1,16 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace InventoryManagementSystem
 {
@@ -28,8 +18,8 @@ namespace InventoryManagementSystem
             nameTextBox.Text = inhousePart.Name;
             inventoryTextBox.Text = inhousePart.Instock.ToString();
             priceTextBox.Text = inhousePart.Price.ToString();
-            maxTextBox.Text = inhousePart.Max.ToString();
-            minTextBox.Text = inhousePart.Min.ToString();
+            Date_Picker.SelectedDate = inhousePart.ArrivedOn.Date;
+            timeTextBox.Text = inhousePart.ArrivedOn.ToShortTimeString();
             machineTextBox.Text = inhousePart.InhousePart.ToString();
 
             oldPart = inhousePart;
@@ -44,125 +34,95 @@ namespace InventoryManagementSystem
             nameTextBox.Text = outsourcePart.Name;
             inventoryTextBox.Text = outsourcePart.Instock.ToString();
             priceTextBox.Text = outsourcePart.Price.ToString();
-            maxTextBox.Text = outsourcePart.Max.ToString();
-            minTextBox.Text = outsourcePart.Min.ToString();
+            Date_Picker.SelectedDate = outsourcePart.ArrivedOn.Date;
+            timeTextBox.Text = outsourcePart.ArrivedOn.ToShortTimeString();
             machineTextBox.Text = outsourcePart.CompanyName;
 
             oldPart = outsourcePart;
         }
 
-        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        private void saveButton_Click(object sender, RoutedEventArgs e)
         {
 
-            int id, instock, min, max, machine;
-            String name, companyID;
+            int id, instock, machine;
+            String name, companyID, timeString;
             decimal price;
+            DateTime date;
 
             id = int.Parse(idTextBox.Text);
 
-            if (nameTextBox.Text.Length != 0)
-            {
-                name = nameTextBox.Text;
-            }
-            else
-            {
-                MessageBox.Show("Name field cannot be empty.");
-                return;
-            }
+            timeString = Date_Picker.Text + " " + timeTextBox.Text;
 
-            if (decimal.TryParse(priceTextBox.Text, out decimal priceVal) && priceVal > 0)
-            {
-                price = priceVal;
-            }
-            else
-            {
-                MessageBox.Show("Price field requires a positive number.");
-                return;
-            }
-
-            if (int.TryParse(minTextBox.Text, out int minVal) && minVal >= 1)
-            {
-                min = minVal;
-            }
-            else
-            {
-                MessageBox.Show("Minimum value field requires a positive number.");
-                return;
-            }
-
-            if (int.TryParse(maxTextBox.Text, out int maxVal) && maxVal >= 1)
-            {
-                if (maxVal >= minVal)
+                if (nameTextBox.Text.Length != 0)
                 {
-                    max = maxVal;
+                    name = nameTextBox.Text;    
+                }
+                else
+                { 
+                    MessageBox.Show("Name field cannot be empty.");
+                    return;
+                }              
+
+                if (decimal.TryParse(priceTextBox.Text, out decimal priceVal) && priceVal > 0)
+                {
+                    price = priceVal;
                 }
                 else
                 {
-                    MessageBox.Show("Maximum value cannot be less than minimum.");
-                    return;
-                }
-            }
-            else
-            {
-                MessageBox.Show("Maximum value field requires a positive number.");
-                return;
-            }
-
-            if (int.TryParse(inventoryTextBox.Text, out int invVal) && (invVal >= 1))
-            {
-                if (invVal > max)
-                {
-                    MessageBox.Show("Inventory cannot exceed maximum value.");
-                    return;
-                }
-                else if (invVal < min)
-                {
-                    MessageBox.Show("Inventory cannot be less than minimum value.");
+                    MessageBox.Show("Price field requires a positive number.");
                     return;
                 }
 
-                instock = invVal;
-            }
-            else
-            {
-                MessageBox.Show("Inventory field requires a positive whole number.");
-                return;
-            }
-
-            if ((bool)outsourced.IsChecked)
-            {
-                if (machineTextBox.Text.Length != 0)
+                if (int.TryParse(inventoryTextBox.Text, out int invVal) && (invVal >= 1))
                 {
+                    instock = invVal;
+                }
+                else
+                {
+                    MessageBox.Show("Inventory field requires a positive whole number.");
+                    return;
+                }
+                if (DateTime.TryParse(timeString, out DateTime newTime)) 
+                {
+                    date = newTime;
+                }
+                else
+                {
+                    MessageBox.Show("Please pick a valid date and time.");
+                    return;
+                }
+
+                if ((bool)outsourced.IsChecked)
+                {
+                    if (machineTextBox.Text.Length != 0)
+                    {
                     companyID = machineTextBox.Text;
-
                     Inventory.DeletePart(oldPart);
-                    OutSourced source = new(id, name, instock, price, max, min, companyID);
+                    OutSourced source = new(id, name, instock, price, date, companyID);
                     Inventory.AddPart(source);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Please Enter Company Name");
+                        return;
+                    }
                 }
-                else
+                else if ((bool)inHouseButton.IsChecked)
                 {
-                    MessageBox.Show("Please Enter Company Name");
-                    return;
+                    if (int.TryParse(machineTextBox.Text, out int machineID) && machineID > 0)
+                    {
+                        machine = machineID;
+                        Inhouse homemade = new(id, name, instock, price, date, machine);
+                        Inventory.AddPart(homemade);
+                    }
+                    else 
+                    {
+                        MessageBox.Show("Machine ID must be a postive number");
+                        return;
+                    }       
                 }
-            }
-            else if ((bool)inHouseButton.IsChecked)
-            {
-                if (int.TryParse(machineTextBox.Text, out int machineID) && machineID > 0)
-                {
-                    machine = machineID;
 
-                    Inventory.DeletePart(oldPart);
-                    Inhouse homemade = new(id, name, instock, price, max, min, machine);
-                    Inventory.AddPart(homemade);
-                }
-                else
-                {
-                    MessageBox.Show("Machine ID must be a postive number");
-                    return;
-                }
-            }
-
-            MessageBox.Show("Part has been modified.");
+            MessageBox.Show("Part has been added to inventory.");
             Close();
         }
 
@@ -180,6 +140,12 @@ namespace InventoryManagementSystem
                 return;
             }
 
+        }
+
+        private void DatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            DateTime startTime = Date_Picker.SelectedDate.Value.ToUniversalTime();
+            timeTextBox.Text = startTime.ToShortTimeString();
         }
     }
 }

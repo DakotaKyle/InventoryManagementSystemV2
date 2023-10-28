@@ -1,17 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace InventoryManagementSystem
 {
@@ -28,11 +17,13 @@ namespace InventoryManagementSystem
         private void saveButton_Click(object sender, RoutedEventArgs e)
         {
 
-            int id, instock, min, max, machine;
-            String name, companyID;
+            int id, instock, machine;
+            String name, companyID, timeString;
             decimal price;
+            DateTime date;
 
             id = int.Parse(idTextBox.Text);
+            timeString = Date_Picker.Text + " " + timeTextBox.Text;
 
                 if (nameTextBox.Text.Length != 0)
                 {
@@ -54,47 +45,8 @@ namespace InventoryManagementSystem
                     return;
                 }
 
-                if (int.TryParse(minTextBox.Text, out int minVal) && minVal >= 1)
-                {
-                    min = minVal;
-                }
-                else
-                {
-                    MessageBox.Show("Minimum value field requires a positive number.");
-                    return;
-                }
-
-                if (int.TryParse(maxTextBox.Text, out int maxVal) && maxVal >= 1)
-                {
-                    if (maxVal >= minVal)
-                    {
-                        max = maxVal;
-                    }
-                    else
-                    {
-                        MessageBox.Show("Maximum value cannot be less than minimum.");
-                        return;
-                    }
-                }
-                else
-                {
-                    MessageBox.Show("Maximum value field requires a positive number.");
-                    return;
-                }
-
                 if (int.TryParse(inventoryTextBox.Text, out int invVal) && (invVal >= 1))
                 {
-                    if (invVal > max)
-                    {
-                        MessageBox.Show("Inventory cannot exceed maximum value.");
-                        return;
-                    }
-                    else if (invVal < min)
-                    {
-                        MessageBox.Show("Inventory cannot be less than minimum value.");
-                        return;
-                    }
-                    
                     instock = invVal;
                 }
                 else
@@ -102,35 +54,44 @@ namespace InventoryManagementSystem
                     MessageBox.Show("Inventory field requires a positive whole number.");
                     return;
                 }
-
-            if ((bool)outsourced.IsChecked)
-            {
-                if (machineTextBox.Text.Length != 0)
+                if (DateTime.TryParse(timeString, out DateTime newTime)) 
                 {
-                    companyID = machineTextBox.Text;
-                    OutSourced source = new(id, name, instock, price, max, min, companyID);
-                    Inventory.AddPart(source);
+                    date = newTime;
                 }
                 else
                 {
-                    MessageBox.Show("Please Enter Company Name");
+                    MessageBox.Show("Please pick a valid date and time.");
                     return;
                 }
-            }
-            else if ((bool)inHouseButton.IsChecked)
-            {
-                if (int.TryParse(machineTextBox.Text, out int machineID) && machineID > 0)
+
+                if ((bool)outsourced.IsChecked)
                 {
-                    machine = machineID;
-                    Inhouse homemade = new(id, name, instock, price, max, min, machine);
-                    Inventory.AddPart(homemade);
+                    if (machineTextBox.Text.Length != 0)
+                    {
+                    companyID = machineTextBox.Text;
+                    OutSourced source = new(id, name, instock, price, date, companyID);
+                    Inventory.AddPart(source);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Please Enter Company Name");
+                        return;
+                    }
                 }
-                else 
+                else if ((bool)inHouseButton.IsChecked)
                 {
-                    MessageBox.Show("Machine ID must be a postive number");
-                    return;
-                }       
-            }
+                    if (int.TryParse(machineTextBox.Text, out int machineID) && machineID > 0)
+                    {
+                        machine = machineID;
+                        Inhouse homemade = new(id, name, instock, price, date, machine);
+                        Inventory.AddPart(homemade);
+                    }
+                    else 
+                    {
+                        MessageBox.Show("Machine ID must be a postive number");
+                        return;
+                    }       
+                }
 
             MessageBox.Show("Part has been added to inventory.");
             Close();
@@ -150,6 +111,12 @@ namespace InventoryManagementSystem
             {
                 return;
             }
+        }
+
+        private void DatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            DateTime startTime = Date_Picker.SelectedDate.Value.ToUniversalTime();
+            timeTextBox.Text = startTime.ToShortTimeString();
         }
     }
 }

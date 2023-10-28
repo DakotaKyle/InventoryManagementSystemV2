@@ -1,17 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace InventoryManagementSystem
 {
@@ -38,8 +28,7 @@ namespace InventoryManagementSystem
             NameTextBox.Text = product.Name;
             InventoryTextBox.Text = product.Instock.ToString();
             PriceTextBox.Text = product.Price.ToString();
-            MaxTextBox.Text = product.Max.ToString();
-            MinTextBox.Text = product.Min.ToString();
+            Date_Picker.SelectedDate = product.MadeOn;
 
             oldProduct = product;
             NewParts = product.associatedPart;
@@ -70,9 +59,10 @@ namespace InventoryManagementSystem
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            int id, instock, min, max;
+            int id, instock;
             string name;
             decimal price;
+            DateTime date;
 
             id = int.Parse(IdTextBox.Text);
 
@@ -96,47 +86,8 @@ namespace InventoryManagementSystem
                 return;
             }
 
-            if (int.TryParse(MinTextBox.Text, out int minVal) && minVal >= 1)
-            {
-                min = minVal;
-            }
-            else
-            {
-                MessageBox.Show("Minimum value field requires a positive number.");
-                return;
-            }
-
-            if (int.TryParse(MaxTextBox.Text, out int maxVal) && maxVal >= 1)
-            {
-                if (maxVal >= minVal)
-                {
-                    max = maxVal;
-                }
-                else
-                {
-                    MessageBox.Show("Maximum value cannot be less than minimum.");
-                    return;
-                }
-            }
-            else
-            {
-                MessageBox.Show("Maximum value field requires a positive number.");
-                return;
-            }
-
             if (int.TryParse(InventoryTextBox.Text, out int invVal) && (invVal >= 1))
             {
-                if (invVal > max)
-                {
-                    MessageBox.Show("Inventory cannot exceed maximum value.");
-                    return;
-                }
-                else if (invVal < min)
-                {
-                    MessageBox.Show("Inventory cannot be less than minimum value.");
-                    return;
-                }
-
                 instock = invVal;
             }
             else
@@ -145,8 +96,10 @@ namespace InventoryManagementSystem
                 return;
             }
 
+            date = (DateTime)Date_Picker.SelectedDate;
+
             Inventory.removeProduct(oldProduct);
-            Product product = new(id, name, instock, price, max, min);
+            Product product = new(id, name, instock, price, date);
             Inventory.AddProduct(product);
 
             foreach (Part part in NewParts)
@@ -228,6 +181,12 @@ namespace InventoryManagementSystem
             {
                 return;
             }
+        }
+
+        private void DatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            DateTime startTime = Date_Picker.SelectedDate.Value.ToUniversalTime();
+            //StartTimeTextBox.Text = startTime.ToShortTimeString();
         }
     }
 }

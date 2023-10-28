@@ -1,31 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace InventoryManagementSystem
 {
     public class Product
     {
         public BindingList<Part> associatedPart = new();
-        
+
         public int ProductID { get; set; }
         public string Name { get; set; }
         public decimal Price { get; set; }
         public int Instock { get; set; }
-        public int Min { get; set; }
-        public int Max { get; set; }
+        public DateTime MadeOn { get; set; }
 
-        public Product(int prodID, string name, int inventory, decimal price, int max, int min)
+        public Product(int prodID, string name, int inventory, decimal price, DateTime madeOn)
         {
             ProductID = prodID;
             Name = name;
             Instock = inventory;
             Price = price;
-            Max = max;
-            Min = min;
+            MadeOn = madeOn;
         }
 
         public void addAssociatedPart(Part part)
@@ -40,11 +35,12 @@ namespace InventoryManagementSystem
                 associatedPart.Remove(part);
                 return true;
 
-            } catch (Exception)
+            }
+            catch (Exception)
             {
                 return false;
             }
-            
+
         }
 
         public bool removeAssociatedPart(int partID)

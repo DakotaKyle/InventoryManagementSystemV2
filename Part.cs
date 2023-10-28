@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+﻿using Org.BouncyCastle.Asn1.Cms;
+using System;
 
 namespace InventoryManagementSystem
 {
     public abstract class Part
     {
-        public int PartID { get; set;}
+        public int PartID { get; set; }
 
         public string Name { get; set; }
 
@@ -18,9 +13,7 @@ namespace InventoryManagementSystem
 
         public int Instock { get; set; }
 
-        public int Min { get; set; }
-
-        public int Max { get; set; }
+        public DateTime ArrivedOn { get; set; }
 
     }
 }

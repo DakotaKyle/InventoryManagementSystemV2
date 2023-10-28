@@ -1,21 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace InventoryManagementSystem
 {
- 
+
     public partial class AddProductWindow : Window
     {
         public BindingList<Part> NewParts = new();
@@ -54,11 +44,13 @@ namespace InventoryManagementSystem
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            int id, instock, min, max;
-            string name;
+            int id, instock;
+            string name, timeString;
             decimal price;
+            DateTime date;
 
             id = int.Parse(IdTextBox.Text);
+            timeString = Date_Picker.Text + " " + timeTextBox.Text;
 
             if (NameTextBox.Text.Length != 0)
             {
@@ -80,47 +72,8 @@ namespace InventoryManagementSystem
                 return;
             }
 
-            if (int.TryParse(MinTextBox.Text, out int minVal) && minVal >= 1)
-            {
-                min = minVal;
-            }
-            else
-            {
-                MessageBox.Show("Minimum value field requires a positive number.");
-                return;
-            }
-
-            if (int.TryParse(MaxTextBox.Text, out int maxVal) && maxVal >= 1)
-            {
-                if (maxVal >= minVal)
-                {
-                    max = maxVal;
-                }
-                else
-                {
-                    MessageBox.Show("Maximum value cannot be less than minimum.");
-                    return;
-                }
-            }
-            else
-            {
-                MessageBox.Show("Maximum value field requires a positive number.");
-                return;
-            }
-
             if (int.TryParse(InventoryTextBox.Text, out int invVal) && (invVal >= 1))
             {
-                if (invVal > max)
-                {
-                    MessageBox.Show("Inventory cannot exceed maximum value.");
-                    return;
-                }
-                else if (invVal < min)
-                {
-                    MessageBox.Show("Inventory cannot be less than minimum value.");
-                    return;
-                }
-
                 instock = invVal;
             }
             else
@@ -128,13 +81,22 @@ namespace InventoryManagementSystem
                 MessageBox.Show("Inventory field requires a positive whole number.");
                 return;
             }
+            if (DateTime.TryParse(timeString, out DateTime newTime))
+            {
+                date = newTime;
+            }
+            else
+            {
+                MessageBox.Show("Please pick a valid date and time.");
+                return;
+            }
 
-            Product product = new(id, name, instock, price, max, min);
+            Product product = new(id, name, instock, price, date);
             Inventory.AddProduct(product);
 
             foreach (Part part in NewParts)
             {
-                product.addAssociatedPart(part);
+             //   product.addAssociatedPart(part);
             }
 
             MessageBox.Show("Product has been added to inventory.");
@@ -146,7 +108,7 @@ namespace InventoryManagementSystem
 
             if (AllPartsDataGrid.SelectedItem != null)
             {
-                Part addPart = ((Part)AllPartsDataGrid.SelectedItem);
+                Part addPart = (Part)AllPartsDataGrid.SelectedItem;
                 NewParts.Add(addPart);
 
                 ProductDataGrid.ItemsSource = NewParts; 
@@ -186,6 +148,12 @@ namespace InventoryManagementSystem
             {
                 return;
             }
+        }
+
+        private void DatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            DateTime startTime = Date_Picker.SelectedDate.Value.ToUniversalTime();
+            timeTextBox.Text = startTime.ToShortTimeString();
         }
     }
 }

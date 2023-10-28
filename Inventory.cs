@@ -18,18 +18,18 @@ namespace InventoryManagementSystem
             allParts.Add(part);
         }
 
-        public static bool DeletePart(Part part) 
+        public static bool DeletePart(Part part)
         {
             allParts.Remove(part);
             return true;
         }
 
-        public static Part LookupPart(int partID) 
+        public static Part LookupPart(int partID)
         {
             int i = 0;
 
-             foreach (Part part in allParts)
-             {
+            foreach (Part part in allParts)
+            {
 
                 if (part.PartID == partID)
                 {

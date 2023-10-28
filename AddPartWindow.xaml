@@ -117,9 +117,22 @@
 
             </Label>
 
-            <Label x:Name="maxLabel"
+            <Label x:Name="inhouseDateLabel"
                    
-                   Content="Max"
+                   Visibility="{Binding IsChecked,ElementName=inHouseButton,Converter={StaticResource b2v}}"
+                   Content="Made On"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Right"
+                   FontFamily="Times New Roman"
+                   FontSize="14"
+                   Margin="0,15,0,20">
+
+            </Label>
+
+            <Label x:Name="outsourcedDateLabel"
+                   
+                   Visibility="{Binding IsChecked,ElementName=outsourced,Converter={StaticResource b2v}}"
+                   Content="Arrived On"
                    VerticalAlignment="Center"
                    HorizontalAlignment="Right"
                    FontFamily="Times New Roman"
@@ -197,34 +210,34 @@
 
             </TextBox>
 
-            <TextBox x:Name="maxTextBox"
+            <DatePicker x:Name="Date_Picker"
                 
-                TextWrapping="Wrap"
-                VerticalAlignment="Center"
-                HorizontalAlignment="Left"
-                Width="104"
-                Margin="15,25,0,20">
+                HorizontalAlignment="Center"
+                FontFamily="Times New Roman"
+                FontSize="14"
+                Width="105"
+                Margin="-175,20,0,0"
+                SelectedDateFormat="Short"
+                SelectedDateChanged="DatePicker_SelectedDateChanged"/>
 
-            </TextBox>
-
-            <Label x:Name="minLabel"
+            <Label x:Name="timeLabel"
                    
-                   Content="Min"
+                   Content="At"
                    VerticalAlignment="Center"
-                   HorizontalAlignment="Left"
+                   HorizontalAlignment="Right"
                    FontFamily="Times New Roman"
                    FontSize="14"
-                   Margin="140,-60,0,0">
+                   Margin="0,-25,150,0">
 
             </Label>
 
-            <TextBox x:Name="minTextBox"
-                
+            <TextBox x:Name="timeTextBox"
+
                 TextWrapping="Wrap"
                 VerticalAlignment="Center"
                 HorizontalAlignment="Left"
-                Width="104"
-                Margin="180,-60,0,0">
+                Width="120"
+                Margin="160,-25,0,0">
 
             </TextBox>
 
@@ -234,7 +247,7 @@
                 VerticalAlignment="Center"
                 HorizontalAlignment="Left"
                 Width="120"
-                Margin="15,25,0,20">
+                Margin="15,45,0,20">
 
             </TextBox>
 

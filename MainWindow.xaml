@@ -92,10 +92,9 @@
 
                     <DataGridTextColumn Header="Part ID" FontFamily="Times New Roman" Width="75*" Binding="{Binding Path=PartID}"/>
                     <DataGridTextColumn Header="Name" FontFamily="Times New Roman" Width="75*" Binding="{Binding Path=Name}"/>
-                    <DataGridTextColumn Header="Inventory" FontFamily="Times New Roman" Width="95*" Binding="{Binding Path=Instock}"/>
-                    <DataGridTextColumn Header="Price" FontFamily="Times New Roman" Width="75*" Binding="{Binding Path=Price}"/>
-                    <DataGridTextColumn Header="Min" FontFamily="Times New Roman" Width="75*" Binding="{Binding Path=Min}"/>
-                    <DataGridTextColumn Header="Max" FontFamily="Times New Roman" Width="75*" Binding="{Binding Path=Max}"/>
+                    <DataGridTextColumn Header="Inventory" FontFamily="Times New Roman" Width="55*" Binding="{Binding Path=Instock}"/>
+                    <DataGridTextColumn Header="Price" FontFamily="Times New Roman" Width="55*" Binding="{Binding Path=Price}"/>
+                    <DataGridTextColumn Header="Date/Time" FontFamily="Times New Roman" Width="115*" Binding="{Binding Path=ArrivedOn}"/>
 
                 </DataGrid.Columns>
 
@@ -202,10 +201,9 @@
 
                     <DataGridTextColumn Header="Part ID" FontFamily="Times New Roman" Width="75*" Binding="{Binding Path=ProductID}"/>
                     <DataGridTextColumn Header="Name" FontFamily="Times New Roman" Width="75*" Binding="{Binding Path=Name}"/>
-                    <DataGridTextColumn Header="Inventory" FontFamily="Times New Roman" Width="95*" Binding="{Binding Path=Instock}"/>
-                    <DataGridTextColumn Header="Price" FontFamily="Times New Roman" Width="75*" Binding="{Binding Path=Price}"/>
-                    <DataGridTextColumn Header="Min" FontFamily="Times New Roman" Width="75*" Binding="{Binding Path=Min}"/>
-                    <DataGridTextColumn Header="Max" FontFamily="Times New Roman" Width="75*" Binding="{Binding Path=Max}"/>
+                    <DataGridTextColumn Header="Inventory" FontFamily="Times New Roman" Width="55*" Binding="{Binding Path=Instock}"/>
+                    <DataGridTextColumn Header="Price" FontFamily="Times New Roman" Width="55*" Binding="{Binding Path=Price}"/>
+                    <DataGridTextColumn Header="Date/Time" FontFamily="Times New Roman" Width="115*" Binding="{Binding Path=MadeOn}"/>
 
                 </DataGrid.Columns>
 

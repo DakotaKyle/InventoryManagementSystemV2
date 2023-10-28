@@ -93,8 +93,7 @@
                     <DataGridTextColumn Header="Name" FontFamily="Times New Roman" Width="75*" Binding="{Binding Path=Name}"/>
                     <DataGridTextColumn Header="Inventory" FontFamily="Times New Roman" Width="95*" Binding="{Binding Path=Instock}"/>
                     <DataGridTextColumn Header="Price" FontFamily="Times New Roman" Width="75*" Binding="{Binding Path=Price}"/>
-                    <DataGridTextColumn Header="Min" FontFamily="Times New Roman" Width="75*" Binding="{Binding Path=Min}"/>
-                    <DataGridTextColumn Header="Max" FontFamily="Times New Roman" Width="75*" Binding="{Binding Path=Max}"/>
+                    <DataGridTextColumn Header="Date/Time" FontFamily="Times New Roman" Width="75*" Binding="{Binding Path=ArrivedOn}"/>
 
                 </DataGrid.Columns>
 
@@ -169,8 +168,7 @@
                     <DataGridTextColumn Header="Name" FontFamily="Times New Roman" Width="75*" Binding="{Binding Path=Name}"/>
                     <DataGridTextColumn Header="Inventory" FontFamily="Times New Roman" Width="95*" Binding="{Binding Path=Instock}"/>
                     <DataGridTextColumn Header="Price" FontFamily="Times New Roman" Width="75*" Binding="{Binding Path=Price}"/>
-                    <DataGridTextColumn Header="Min" FontFamily="Times New Roman" Width="75*" Binding="{Binding Path=Min}"/>
-                    <DataGridTextColumn Header="Max" FontFamily="Times New Roman" Width="75*" Binding="{Binding Path=Max}"/>
+                    <DataGridTextColumn Header="Date/Time" FontFamily="Times New Roman" Width="75*" Binding="{Binding Path=MadeOn}"/>
 
                 </DataGrid.Columns>
 
@@ -266,9 +264,9 @@
 
             </Label>
 
-            <Label x:Name="MaxLabel"
+            <Label x:Name="DateLabel"
                    
-                   Content="Max"
+                   Content="Date"
                    HorizontalAlignment="Left"
                    VerticalAlignment="Top"
                    FontFamily="Times New Roman"
@@ -327,41 +325,18 @@
 
             </TextBox>
 
-            <TextBox x:Name="MaxTextBox"
-                     
-                     HorizontalAlignment="Left"
-                     VerticalAlignment="Top"
-                     FontFamily="Times New Roman"
-                     FontSize="16"
-                     Width="75"
-                     Height="20"
-                     Margin="75,-25,0,0">
+            <DatePicker x:Name="Date_Picker"
+                
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontFamily="Times New Roman"
+                FontSize="16"
+                Width="160"
+                Margin="0,-25,0,0"
+                SelectedDateFormat="Short"
+                SelectedDateChanged="DatePicker_SelectedDateChanged">
 
-            </TextBox>
-
-            <Label x:Name="MinLabel"
-                   
-                   HorizontalAlignment="Left"
-                   VerticalAlignment="Top"
-                   Content="Min"
-                   FontFamily="Times New Roman"
-                   FontSize="16"
-                   Width="104"
-                   Margin="175,-29,0,0">
-
-            </Label>
-
-            <TextBox x:Name="MinTextBox"
-                     
-                     HorizontalAlignment="Left"
-                     VerticalAlignment="Top"
-                     FontFamily="Times New Roman"
-                     FontSize="16"
-                     Width="75"
-                     Height="20"
-                     Margin="220,-25,0,0">
-
-            </TextBox>
+            </DatePicker>
 
         </StackPanel>
 

@@ -6,18 +6,17 @@ using System.Threading.Tasks;
 
 namespace InventoryManagementSystem
 {
-   public class OutSourced : Part
+    public class OutSourced : Part
     {
-        public String CompanyName { get; set; }
+        public string CompanyName { get; set; }
 
-        public OutSourced(int partID, string name, int instock, decimal price, int max, int min, string company) 
+        public OutSourced(int partID, string name, int instock, decimal price, DateTime arrivedOn, string company)
         {
             PartID = partID;
             Name = name;
             Instock = instock;
             Price = price;
-            Max = max;
-            Min = min;
+            ArrivedOn = arrivedOn;
             CompanyName = company;
         }
     }

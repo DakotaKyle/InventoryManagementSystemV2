@@ -1,28 +1,35 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace InventoryManagementSystem
 {
     public partial class MainWindow : Window
     {
+        private static readonly LoginPage login = new();
 
         public MainWindow()
         {
             InitializeComponent();
             PartDataGrid.ItemsSource = Inventory.allParts;
             ProductDataGrid.ItemsSource = Inventory.products;
+
+            try
+            {
+                while (!LoginPage.isvalid)
+                {
+                    Hide();
+                    login.ShowDialog();
+
+                    if (LoginPage.isvalid)
+                    {
+                        Show();
+                    }
+                }
+            }
+            catch (InvalidOperationException)
+            {
+                Close();
+            }
         }
 
         private void AddPartButton_Click(object sender, RoutedEventArgs e)
