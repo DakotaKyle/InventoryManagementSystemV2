@@ -2,6 +2,8 @@
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
+using InventoryManagementSystem.Database_Service;
+using InventoryManagementSystem.Models;
 
 namespace InventoryManagementSystem
 {

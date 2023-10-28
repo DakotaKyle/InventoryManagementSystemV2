@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Linq;
 
-namespace InventoryManagementSystem
+namespace InventoryManagementSystem.Models
 {
     public class Product
     {

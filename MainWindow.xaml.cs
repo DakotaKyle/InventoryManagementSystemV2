@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Windows;
+using InventoryManagementSystem.Database_Service;
+using InventoryManagementSystem.Models;
 
 namespace InventoryManagementSystem
 {

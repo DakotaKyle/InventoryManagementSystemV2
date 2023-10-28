@@ -1,7 +1,7 @@
 ﻿using Org.BouncyCastle.Asn1.Cms;
 using System;
 
-namespace InventoryManagementSystem
+namespace InventoryManagementSystem.Models
 {
     public abstract class Part
     {
