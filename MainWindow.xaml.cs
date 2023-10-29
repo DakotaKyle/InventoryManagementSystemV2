@@ -8,10 +8,13 @@ namespace InventoryManagementSystem
     public partial class MainWindow : Window
     {
         private static readonly LoginPage login = new();
+        private Inventory inv = new();
 
         public MainWindow()
         {
             InitializeComponent();
+
+            inv.initPart();
             PartDataGrid.ItemsSource = Inventory.allParts;
             ProductDataGrid.ItemsSource = Inventory.products;
 
@@ -159,7 +162,7 @@ namespace InventoryManagementSystem
             {
                 Part modify = ((Part)PartDataGrid.SelectedItem);
 
-                if (modify.GetType().ToString() == "InventoryManagementSystem.Inhouse")
+                if (modify.GetType().ToString() == "InventoryManagementSystem.Models.Inhouse")
                 {
                     Inhouse inhouse = (Inhouse)modify;
                     ModifyPartWindow modifyPart = new(inhouse);
@@ -167,7 +170,7 @@ namespace InventoryManagementSystem
                     modifyPart.ShowDialog();
 
                 }
-                else if (modify.GetType().ToString() == "InventoryManagementSystem.OutSourced")
+                else if (modify.GetType().ToString() == "InventoryManagementSystem.Models.OutSourced")
                 {
                     OutSourced outsource = (OutSourced)modify;
                     ModifyPartWindow modifyPart = new(outsource);
@@ -189,6 +192,11 @@ namespace InventoryManagementSystem
         private void SearchProductField_GotFocus(object sender, RoutedEventArgs e)
         {
             SearchProductField.Clear();
+        }
+
+        private void PartDataGrid_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+
         }
     }
 }

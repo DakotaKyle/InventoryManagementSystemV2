@@ -86,14 +86,14 @@
                 FontSize="16"
                 Height="375"
                 Margin="5,5,10,0"
-                IsReadOnly="True">
+                IsReadOnly="True" SelectionChanged="PartDataGrid_SelectionChanged">
 
                 <DataGrid.Columns>
 
                     <DataGridTextColumn Header="Part ID" FontFamily="Times New Roman" Width="75*" Binding="{Binding Path=PartID}"/>
-                    <DataGridTextColumn Header="Name" FontFamily="Times New Roman" Width="75*" Binding="{Binding Path=Name}"/>
+                    <DataGridTextColumn Header="Name" FontFamily="Times New Roman" Width="80*" Binding="{Binding Path=Name}"/>
                     <DataGridTextColumn Header="Inventory" FontFamily="Times New Roman" Width="55*" Binding="{Binding Path=Instock}"/>
-                    <DataGridTextColumn Header="Price" FontFamily="Times New Roman" Width="55*" Binding="{Binding Path=Price}"/>
+                    <DataGridTextColumn Header="Total Cost" FontFamily="Times New Roman" Width="65*" Binding="{Binding Path=Price}"/>
                     <DataGridTextColumn Header="Date/Time" FontFamily="Times New Roman" Width="115*" Binding="{Binding Path=ArrivedOn}"/>
 
                 </DataGrid.Columns>
@@ -202,7 +202,7 @@
                     <DataGridTextColumn Header="Part ID" FontFamily="Times New Roman" Width="75*" Binding="{Binding Path=ProductID}"/>
                     <DataGridTextColumn Header="Name" FontFamily="Times New Roman" Width="75*" Binding="{Binding Path=Name}"/>
                     <DataGridTextColumn Header="Inventory" FontFamily="Times New Roman" Width="55*" Binding="{Binding Path=Instock}"/>
-                    <DataGridTextColumn Header="Price" FontFamily="Times New Roman" Width="55*" Binding="{Binding Path=Price}"/>
+                    <DataGridTextColumn Header="Total Cost" FontFamily="Times New Roman" Width="55*" Binding="{Binding Path=Price}"/>
                     <DataGridTextColumn Header="Date/Time" FontFamily="Times New Roman" Width="115*" Binding="{Binding Path=MadeOn}"/>
 
                 </DataGrid.Columns>

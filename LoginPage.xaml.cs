@@ -59,6 +59,7 @@ namespace InventoryManagementSystem
                         isvalid = true;
                         return;
                     }
+                    i++;
                 }
 
                 if (!isvalid)
@@ -71,6 +72,7 @@ namespace InventoryManagementSystem
                 MessageBox.Show("Error: " + ex);
                 connection.Dispose();
             }
+            finally { connection.Close(); }
         }
 
         private void Loginbuton_Click(object sender, RoutedEventArgs e)

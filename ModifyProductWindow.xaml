@@ -244,7 +244,7 @@
 
             <Label x:Name="InventoryLabel"
                    
-                   Content="Inventory"
+                   Content="Quantity"
                    HorizontalAlignment="Left"
                    VerticalAlignment="Top"
                    FontFamily="Times New Roman"
@@ -255,7 +255,7 @@
 
             <Label x:Name="PriceLabel"
                    
-                   Content="Price"
+                   Content="Unit Cost"
                    HorizontalAlignment="Left"
                    VerticalAlignment="Top"
                    FontFamily="Times New Roman"

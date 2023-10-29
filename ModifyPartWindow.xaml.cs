@@ -149,5 +149,10 @@ namespace InventoryManagementSystem
             DateTime startTime = Date_Picker.SelectedDate.Value.ToUniversalTime();
             timeTextBox.Text = startTime.ToShortTimeString();
         }
+
+        private void nameTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
     }
 }

@@ -97,7 +97,7 @@
 
             <Label x:Name="inventoryLabel"
                    
-                   Content="Inventory"
+                   Content="Quantity(Kgs)"
                    VerticalAlignment="Center"
                    HorizontalAlignment="Right"
                    FontFamily="Times New Roman"
@@ -108,7 +108,7 @@
 
             <Label x:Name="PriceLabel"
                    
-                   Content="Price/Cost"
+                   Content="Unit Cost($)"
                    VerticalAlignment="Center"
                    HorizontalAlignment="Right"
                    FontFamily="Times New Roman"
@@ -186,7 +186,7 @@
                 VerticalAlignment="Center"
                 HorizontalAlignment="Left"
                 Width="120"
-                Margin="15,25,0,20">
+                Margin="15,25,0,20" TextChanged="nameTextBox_TextChanged">
 
             </TextBox>
 

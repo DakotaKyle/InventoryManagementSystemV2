@@ -1,15 +1,22 @@
 ﻿using System;
+using System.Diagnostics.Metrics;
 using System.Windows;
 using System.Windows.Controls;
+using System.Xml.Linq;
 using InventoryManagementSystem.Database_Service;
 using InventoryManagementSystem.Models;
+using MySql.Data.MySqlClient;
 
 namespace InventoryManagementSystem
 {
     public partial class AddPartWindow : Window
     {
-        string name;
-        int id;
+        private static String connectionString = "Host=localhost;Port=3306;Database=duco_db;Username=root;Password=password";
+        private MySqlConnection connection = new(connectionString);
+        string name, companyID, timeString;
+        int id, instock, machine;
+        decimal price, total;
+        DateTime date;
 
         public AddPartWindow()
         {
@@ -18,87 +25,99 @@ namespace InventoryManagementSystem
 
         private void saveButton_Click(object sender, RoutedEventArgs e)
         {
-
-            int instock, machine;
-            String companyID, timeString;
-            decimal price;
-            DateTime date;
-
-            id = int.Parse(idTextBox.Text);
-            timeString = Date_Picker.Text + " " + timeTextBox.Text;
-
-            if (name == null)
+            
+            if (idTextBox.Text.Length != 0)
             {
-                MessageBox.Show("Select a name to continue.");
+                id = int.Parse(idTextBox.Text);
+            }
+            else
+            {
+                MessageBox.Show("Select a part name to continue.");
                 return;
             }
 
-                if (decimal.TryParse(priceTextBox.Text, out decimal priceVal) && priceVal > 0)
+            foreach (Part part in Inventory.allParts)
+            {
+                if (part.Name.Equals(name))
                 {
-                    price = priceVal;
-                }
-                else
-                {
-                    MessageBox.Show("Price field requires a positive number.");
+                    MessageBox.Show("Please select a part that hasn't been added yet. You can update existing parts in the modify window.");
                     return;
                 }
+            }
+            
+            timeString = Date_Picker.Text + " " + timeTextBox.Text;
+
+            if (decimal.TryParse(priceTextBox.Text, out decimal priceVal) && priceVal > 0)
+            {
+                price = priceVal;
 
                 if (int.TryParse(inventoryTextBox.Text, out int invVal) && (invVal >= 1))
                 {
                     instock = invVal;
+                    total = Inventory.calculate_total(instock, price);
                 }
                 else
                 {
-                    MessageBox.Show("Inventory field requires a positive whole number.");
+                    MessageBox.Show("Quantity field requires a positive whole number.");
                     return;
                 }
-                if (DateTime.TryParse(timeString, out DateTime newTime)) 
-                {
-                    date = newTime;
-                }
-                else
-                {
-                    MessageBox.Show("Please pick a valid date and time.");
-                    return;
-                }
+            }
+            else
+            {
+                MessageBox.Show("Unit Cost field requires a positive number.");
+                return;
+            }
 
-                if ((bool)outsourced.IsChecked)
+            if (DateTime.TryParse(timeString, out DateTime newTime))
+            {
+                date = newTime;
+            }
+            else
+            {
+                MessageBox.Show("Please pick a valid date and time.");
+                return;
+            }
+
+            if ((bool)outsourced.IsChecked)
+            {
+                if (machineTextBox.Text.Length != 0)
                 {
-                    if (machineTextBox.Text.Length != 0)
-                    {
                     companyID = machineTextBox.Text;
-                    OutSourced source = new(id, name, instock, price, date, companyID);
+
+                    OutSourced source = new(id, name, instock, total, date, companyID);
                     Inventory.AddPart(source);
-                    }
-                    else
-                    {
-                        MessageBox.Show("Please Enter Company Name");
-                        return;
-                    }
+                    add_part();
                 }
-                else if ((bool)inHouseButton.IsChecked)
+                else
                 {
-                    if (int.TryParse(machineTextBox.Text, out int machineID) && machineID > 0)
-                    {
-                        machine = machineID;
-                        Inhouse homemade = new(id, name, instock, price, date, machine);
-                        Inventory.AddPart(homemade);
-                    }
-                    else 
-                    {
-                        MessageBox.Show("Machine ID must be a postive number");
-                        return;
-                    }       
+                    MessageBox.Show("Please Enter Company Name");
+                    return;
                 }
+            }
+            else if ((bool)inHouseButton.IsChecked)
+            {
+                if (int.TryParse(machineTextBox.Text, out int machineID) && machineID > 0)
+                {
+                    machine = machineID;
+                    Inhouse homemade = new(id, name, instock, total, date, machine);
+                    Inventory.AddPart(homemade);
+                    add_part();
+                }
+                else
+                {
+                    MessageBox.Show("Machine ID must be a postive number");
+                    return;
+                }
+            }
 
             MessageBox.Show("Part has been added to inventory.");
             Close();
         }
-                
+
         private void cancelButton_Click(object sender, RoutedEventArgs e)
         {
 
-            MessageBoxResult messageBoxResult = MessageBox.Show("Are you sure you want to exit? Any unsaved progess will be lost.", 
+            MessageBoxResult messageBoxResult = MessageBox.Show("Are you sure you want to exit? Any unsaved progess will be lost.",
                 "", MessageBoxButton.YesNo);
 
             if (messageBoxResult == MessageBoxResult.Yes)
@@ -159,6 +178,46 @@ namespace InventoryManagementSystem
 
                 default:
                     break;
+            }
+        }
+
+        private void add_part()
+        {
+            string userData = "INSERT INTO parts (part_id, part_name, quantity, unit_cost, created_on, machine_id, company_name) VALUES (@id, @name, @instock, @price, @date, @machine, @company)";
+
+            using (MySqlConnection con = new(connectionString))
+            {
+                try
+                {
+                    connection.Open();
+
+                    using (MySqlCommand cmd = new(userData, connection))
+                    {
+                        cmd.Parameters.Add("@id", MySqlDbType.Int32).Value = id;
+                        cmd.Parameters.Add("@name", MySqlDbType.VarChar).Value = name;
+                        cmd.Parameters.Add("@instock", MySqlDbType.Decimal).Value = (decimal)instock;
+                        cmd.Parameters.Add("@price", MySqlDbType.Decimal).Value = price;
+                        cmd.Parameters.Add("@date", MySqlDbType.DateTime).Value = date;
+
+                        if ((bool)inHouseButton.IsChecked)
+                        {
+                            cmd.Parameters.Add("@machine", MySqlDbType.Int32).Value = machine;
+                            cmd.Parameters.Add("@company", MySqlDbType.VarChar).Value = "NA";
+                        }
+                        else if ((bool)outsourced.IsChecked)
+                        {
+                            cmd.Parameters.Add("@machine", MySqlDbType.Int32).Value = 0;
+                            cmd.Parameters.Add("@company", MySqlDbType.VarChar).Value = companyID;
+                        }
+                            cmd.ExecuteNonQuery();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message);
+                    connection.Dispose();
+                }
+                finally { connection.Close(); }
             }
         }
     }
