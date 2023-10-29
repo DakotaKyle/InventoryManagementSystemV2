@@ -180,15 +180,24 @@
 
             </TextBox>
 
-            <TextBox x:Name="nameTextBox"
+            <ComboBox x:Name="nameComboBox"
                 
-                TextWrapping="Wrap"
+                HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                HorizontalAlignment="Left"
-                Width="120"
-                Margin="15,25,0,20">
+                FontFamily="Times New Roman"
+                FontSize="14"
+                Width="130"
+                Margin="0,0,155,-62"
+                SelectionChanged="nameComboBox_SelectionChanged">
 
-            </TextBox>
+                <ComboBoxItem Content="Tungsten Ingots"/>
+                <ComboBoxItem Content="Aluminum Alloy"/>
+                <ComboBoxItem Content="Sand"/>
+                <ComboBoxItem Content="Ballast"/>
+                <ComboBoxItem Content="Nickle Alloy"/>
+                <ComboBoxItem Content="White Phosphorus"/>
+
+            </ComboBox>
 
             <TextBox x:Name="inventoryTextBox"
                 
@@ -196,7 +205,7 @@
                 VerticalAlignment="Center"
                 HorizontalAlignment="Left"
                 Width="120"
-                Margin="15,25,0,20">
+                Margin="15,90,0,20">
 
             </TextBox>
 

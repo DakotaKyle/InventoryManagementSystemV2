@@ -12,5 +12,3 @@ END//
 DELIMITER ;
 
 call add_user("test", "password");
-
-select * from users

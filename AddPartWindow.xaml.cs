@@ -8,34 +8,30 @@ namespace InventoryManagementSystem
 {
     public partial class AddPartWindow : Window
     {
+        string name;
+        int id;
 
         public AddPartWindow()
         {
             InitializeComponent();
-            Random ranID = new();
-            idTextBox.Text = ranID.Next().ToString();
         }
 
         private void saveButton_Click(object sender, RoutedEventArgs e)
         {
 
-            int id, instock, machine;
-            String name, companyID, timeString;
+            int instock, machine;
+            String companyID, timeString;
             decimal price;
             DateTime date;
 
             id = int.Parse(idTextBox.Text);
             timeString = Date_Picker.Text + " " + timeTextBox.Text;
 
-                if (nameTextBox.Text.Length != 0)
-                {
-                    name = nameTextBox.Text;    
-                }
-                else
-                { 
-                    MessageBox.Show("Name field cannot be empty.");
-                    return;
-                }              
+            if (name == null)
+            {
+                MessageBox.Show("Select a name to continue.");
+                return;
+            }
 
                 if (decimal.TryParse(priceTextBox.Text, out decimal priceVal) && priceVal > 0)
                 {
@@ -119,6 +115,51 @@ namespace InventoryManagementSystem
         {
             DateTime startTime = Date_Picker.SelectedDate.Value.ToUniversalTime();
             timeTextBox.Text = startTime.ToShortTimeString();
+        }
+
+        private void nameComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            switch (nameComboBox.SelectedItem.ToString())
+            {
+                case "System.Windows.Controls.ComboBoxItem: Tungsten Ingots":
+
+                    idTextBox.Text = "65874";
+                    name = "Tungsten Ingots";
+                    break;
+
+                case "System.Windows.Controls.ComboBoxItem: Aluminum Alloy":
+
+                    idTextBox.Text = "24321";
+                    name = "Aluminum Alloy";
+                    break;
+
+                case "System.Windows.Controls.ComboBoxItem: Sand":
+
+                    name = "Sand";
+                    idTextBox.Text = "67326";
+                    break;
+
+                case "System.Windows.Controls.ComboBoxItem: Ballast":
+
+                    name = "Ballast";
+                    idTextBox.Text = "39512";
+                    break;
+
+                case "System.Windows.Controls.ComboBoxItem: Nickle Alloy":
+
+                    name = "Nickle Alloy";
+                    idTextBox.Text = "02839";
+                    break;
+
+                case "System.Windows.Controls.ComboBoxItem: White Phosphorus":
+
+                    name = "White Phosphorus";
+                    idTextBox.Text = "58165";
+                    break;
+
+                default:
+                    break;
+            }
         }
     }
 }
