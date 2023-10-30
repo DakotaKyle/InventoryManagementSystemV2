@@ -19,6 +19,7 @@ namespace InventoryManagementSystem.Database_Service
 
         private static String connectionString = "Host=localhost;Port=3306;Database=duco_db;Username=root;Password=password";
         private MySqlConnection connection = new(connectionString);
+        private int id;
 
         public void initPart()
         {
@@ -26,7 +27,7 @@ namespace InventoryManagementSystem.Database_Service
             DataTable partTable = new();
 
             string name, companyID;
-            int id, instock, machine;
+            int instock, machine;
             int i = 0;
             decimal price;
             DateTime date;
@@ -82,10 +83,27 @@ namespace InventoryManagementSystem.Database_Service
             allParts.Add(part);
         }
 
-        public static bool DeletePart(Part part)
+        public static void DeletePart(Part part)
         {
+            Inventory inv = new();
+            inv.DeletePartFromDatabase(part);
             allParts.Remove(part);
-            return true;
+        }
+
+        private void DeletePartFromDatabase(Part part)
+        {
+            id = part.PartID;
+            string deletePart = "DELETE FROM parts WHERE part_id=@partId";
+
+            connection.Open();
+
+            using (MySqlCommand cmd = new(deletePart, connection))
+            {
+                cmd.Parameters.Add("@partId", MySqlDbType.Int32).Value = id;
+                cmd.ExecuteNonQuery();
+            }
+
+            connection.Close();
         }
 
         public static Part LookupPart(int partID)

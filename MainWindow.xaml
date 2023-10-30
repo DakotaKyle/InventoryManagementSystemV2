@@ -86,7 +86,7 @@
                 FontSize="16"
                 Height="375"
                 Margin="5,5,10,0"
-                IsReadOnly="True" SelectionChanged="PartDataGrid_SelectionChanged">
+                IsReadOnly="True">
 
                 <DataGrid.Columns>
 
@@ -199,7 +199,7 @@
 
                 <DataGrid.Columns>
 
-                    <DataGridTextColumn Header="Part ID" FontFamily="Times New Roman" Width="75*" Binding="{Binding Path=ProductID}"/>
+                    <DataGridTextColumn Header="Product ID" FontFamily="Times New Roman" Width="75*" Binding="{Binding Path=ProductID}"/>
                     <DataGridTextColumn Header="Name" FontFamily="Times New Roman" Width="75*" Binding="{Binding Path=Name}"/>
                     <DataGridTextColumn Header="Inventory" FontFamily="Times New Roman" Width="55*" Binding="{Binding Path=Instock}"/>
                     <DataGridTextColumn Header="Total Cost" FontFamily="Times New Roman" Width="55*" Binding="{Binding Path=Price}"/>

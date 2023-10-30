@@ -17,8 +17,6 @@ namespace InventoryManagementSystem
             InitializeComponent();
 
             AllPartsDataGrid.ItemsSource = Inventory.allParts;
-            Random ranID = new();
-            IdTextBox.Text = ranID.Next().ToString();
         }
 
         private void AllPartSearchButton_Click(object sender, RoutedEventArgs e)
@@ -50,8 +48,8 @@ namespace InventoryManagementSystem
             string name, timeString;
             decimal price;
             DateTime date;
+            id = 0;
 
-            id = int.Parse(IdTextBox.Text);
             timeString = Date_Picker.Text + " " + timeTextBox.Text;
 
             if (NameTextBox.Text.Length != 0)

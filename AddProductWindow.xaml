@@ -5,40 +5,26 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:InventoryManagementSystem"
         mc:Ignorable="d"
-        Title="Product" Height="800" Width="1200">
+        Title="Product" Height="800" Width="900">
 
     <Grid>
 
         <Grid.ColumnDefinitions>
 
-            <ColumnDefinition Width="107*"/>
-            <ColumnDefinition Width="293*"/>
+            <ColumnDefinition Width="0*"/>
+            <ColumnDefinition/>
 
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
 
-            <RowDefinition Height="320*"/>
-            <RowDefinition Height="395*"/>
+            <RowDefinition Height="64*"/>
+            <RowDefinition Height="79*"/>
 
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Column="0" Grid.Row="0">
 
-            <Label x:Name="WindowNameLabel"
-                   
-                   HorizontalAlignment="Left"
-                   VerticalAlignment="Top"
-                   Content="Add Product"
-                   FontFamily="Times New Roman"
-                   FontSize="20"
-                   Margin="50,20,0,0">
-                
-            </Label>
-
-        </StackPanel>
-
-        <StackPanel Grid.Column="1" Grid.Row="0">
+        <StackPanel Grid.Column="1" Grid.Row="0" Margin="0,0,0,433" Grid.RowSpan="2">
 
             <Label x:Name="AllPartsLabel"
                    
@@ -49,7 +35,7 @@
                    FontSize="16"
                    Margin="25,25,0,0"
 >
-                
+
             </Label>
 
             <Button x:Name="AllPartSearchButton"
@@ -64,7 +50,7 @@
                     Margin="0,-50,0,0"
                     Click="AllPartSearchButton_Click"
                     Cursor="Hand">
-                
+
             </Button>
 
             <TextBox x:Name="AllPartsTextBox"
@@ -76,14 +62,14 @@
                      Width="240"
                      Height="30"
                      Margin="350,-50,0,0">
-                
+
             </TextBox>
 
             <DataGrid x:Name="AllPartsDataGrid" AutoGenerateColumns="False"
                       
                       FontFamily="Times New Roman"
                       FontSize="16"
-                      Height="250"
+                      Height="225"
                       Margin="0,0,5,0"
                       IsReadOnly="True">
 
@@ -107,7 +93,7 @@
                     FontFamily="Times New Roman"
                     FontSize="16"
                     Width="45"
-                    Height="30"
+                    Height="28"
                     Margin="0,8,50,0"
                     Click="AllPartsAddButton_Click"
                     Cursor="Hand">
@@ -124,8 +110,8 @@
                    Content="Parts Associated with this Product"
                    FontFamily="Times New Roman"
                    FontSize="16"
-                   Margin="15,25,0,0">
-                
+                   Margin="400,0,0,0">
+
             </Label>
 
             <DataGrid x:Name="ProductDataGrid" AutoGenerateColumns="False"
@@ -133,34 +119,19 @@
                       FontFamily="Times New Roman"
                       FontSize="16"
                       Height="250"
-                      Margin="0,0,5,0"
+                      Width="450"
+                      Margin="150,0,5,0"
                       IsReadOnly="True">
 
                 <DataGrid.Columns>
 
                     <DataGridTextColumn Header="Part ID" FontFamily="Times New Roman" Width="75*" Binding="{Binding Path=PartID}"/>
                     <DataGridTextColumn Header="Name" FontFamily="Times New Roman" Width="75*" Binding="{Binding Path=Name}"/>
-                    <DataGridTextColumn Header="Inventory" FontFamily="Times New Roman" Width="95*" Binding="{Binding Path=Instock}"/>
                     <DataGridTextColumn Header="Price" FontFamily="Times New Roman" Width="75*" Binding="{Binding Path=Price}"/>
-                    <DataGridTextColumn Header="Date/Time" FontFamily="Times New Roman" Width="115*" Binding="{Binding Path=MadeOn}"/>
 
                 </DataGrid.Columns>
 
             </DataGrid>
-
-            <Button x:Name="ProductDeleteButton"
-                    
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Bottom"
-                    Content="Delete"
-                    FontFamily="Times New Roman"
-                    FontSize="16"
-                    Width="60"
-                    Height="30"
-                    Margin="0,8,50,0"
-                    Click="ProductDeleteButton_Click"
-                    Cursor="Hand">
-     </Button>
 
             <Button x:Name="CancelButton"
                     
@@ -171,12 +142,12 @@
                     FontSize="16"
                     Width="60"
                     Height="30"
-                    Margin="0,20,0,0"
+                    Margin="0,20,-150,0"
                     Click="CancelButton_Click"
                     Cursor="Hand">
             </Button>
 
-                <Button x:Name="SaveButton"
+            <Button x:Name="SaveButton"
                     
                     HorizontalAlignment="Center"
                     VerticalAlignment="Bottom"
@@ -185,24 +156,34 @@
                     FontSize="16"
                     Width="60"
                     Height="30"
-                    Margin="-150,-30,0,0"
+                    Margin="-150,-30,-145,0"
                     Click="SaveButton_Click"
                     Cursor="Hand">
 
             </Button>
-        </StackPanel>
+            <Button x:Name="ProductDeleteButton"
+                    
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Bottom"
+                    Content="Delete"
+                    FontFamily="Times New Roman"
+                    FontSize="16"
+                    Width="60"
+                    Height="30"
+                    Margin="0,-100,-300,0"
+                    Click="ProductDeleteButton_Click"
+                    Cursor="Hand">
+            </Button>
 
-        <StackPanel Grid.Column="0" Grid.Row="1">
-
-            <Label x:Name="IdLabel"
+            <Label x:Name="WindowNameLabel"
                    
-                   Content="ID"
                    HorizontalAlignment="Left"
                    VerticalAlignment="Top"
+                   Content="Add Product"
                    FontFamily="Times New Roman"
-                   FontSize="16"
-                   Margin="25,0,0,0">
-                
+                   FontSize="20"
+                   Margin="10,-315,0,0">
+
             </Label>
 
             <Label x:Name="NameLabel"
@@ -212,7 +193,7 @@
                    VerticalAlignment="Top"
                    FontFamily="Times New Roman"
                    FontSize="16"
-                   Margin="25,10,0,0">
+                   Margin="25,-250,0,0">
 
             </Label>
 
@@ -223,7 +204,7 @@
                    VerticalAlignment="Top"
                    FontFamily="Times New Roman"
                    FontSize="16"
-                   Margin="25,10,0,0">
+                   Margin="25,-200,0,0">
 
             </Label>
 
@@ -234,7 +215,7 @@
                    VerticalAlignment="Top"
                    FontFamily="Times New Roman"
                    FontSize="16"
-                   Margin="25,10,0,0">
+                   Margin="25,-150,0,0">
 
             </Label>
 
@@ -245,23 +226,9 @@
                    VerticalAlignment="Top"
                    FontFamily="Times New Roman"
                    FontSize="16"
-                   Margin="25,10,0,0">
+                   Margin="25,-100,0,0">
 
             </Label>
-
-            <TextBox x:Name="IdTextBox"
-                     
-                     IsEnabled="False"
-                     HorizontalAlignment="Center"
-                     VerticalAlignment="Top"
-                     FontFamily="Times New Roman"
-                     FontSize="16"
-                     Width="120"
-                     Height="20"
-                     Margin="0,-177,0,0"
-                     >
-                
-            </TextBox>
 
             <TextBox x:Name="NameTextBox"
                      
@@ -271,8 +238,8 @@
                      FontSize="16"
                      Width="120"
                      Height="20"
-                     Margin="0,-140,0,0">
-                
+                     Margin="-550,-250,0,0">
+
             </TextBox>
 
             <TextBox x:Name="InventoryTextBox"
@@ -283,7 +250,7 @@
                      FontSize="16"
                      Width="120"
                      Height="20"
-                     Margin="0,-100,0,0">
+                     Margin="-550,-195,0,0">
 
             </TextBox>
 
@@ -295,7 +262,7 @@
                      FontSize="16"
                      Width="120"
                      Height="20"
-                     Margin="0,-60,0,0">
+                     Margin="-550,-145,0,0">
 
             </TextBox>
 
@@ -305,35 +272,30 @@
                 FontFamily="Times New Roman"
                 FontSize="16"
                 Width="122"
-                Margin="-148,-25,-75,50"
+                Margin="-645,-95,-95,95"
                 SelectedDateFormat="Short"
                 SelectedDateChanged="DatePicker_SelectedDateChanged"/>
 
             <Label x:Name="timeLabel"
                    
-                   HorizontalAlignment="Left"
-                   VerticalAlignment="Top"
                    Content="At"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Left"
                    FontFamily="Times New Roman"
-                   FontSize="16"
-                   Width="104"
-                   Margin="185,-75,0,0">
-                
+                   FontSize="14"
+                   Margin="70,-125,0,0">
+
             </Label>
 
             <TextBox x:Name="timeTextBox"
-                     
-                     HorizontalAlignment="Left"
-                     VerticalAlignment="Top"
-                     FontFamily="Times New Roman"
-                     FontSize="16"
-                     Width="104"
-                     Height="20"
-                     Margin="210,-70,0,0">
+
+                TextWrapping="Wrap"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Left"
+                Width="120"
+                Margin="105,-125,0,0">
 
             </TextBox>
-
         </StackPanel>
-
     </Grid>
 </Window>

@@ -193,10 +193,5 @@ namespace InventoryManagementSystem
         {
             SearchProductField.Clear();
         }
-
-        private void PartDataGrid_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-
-        }
     }
 }

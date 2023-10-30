@@ -186,7 +186,7 @@
                 VerticalAlignment="Center"
                 HorizontalAlignment="Left"
                 Width="120"
-                Margin="15,25,0,20" TextChanged="nameTextBox_TextChanged">
+                Margin="15,25,0,20">
 
             </TextBox>
 

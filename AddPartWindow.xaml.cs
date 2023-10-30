@@ -25,24 +25,15 @@ namespace InventoryManagementSystem
 
         private void saveButton_Click(object sender, RoutedEventArgs e)
         {
-            
-            if (idTextBox.Text.Length != 0)
+
+            if (nameTextBox.Text.Length != 0)
             {
-                id = int.Parse(idTextBox.Text);
+                name = nameTextBox.Text;
             }
             else
             {
-                MessageBox.Show("Select a part name to continue.");
+                MessageBox.Show("Enter a part name to continue.");
                 return;
-            }
-
-            foreach (Part part in Inventory.allParts)
-            {
-                if (part.Name.Equals(name))
-                {
-                    MessageBox.Show("Please select a part that hasn't been added yet. You can update existing parts in the modify window.");
-                    return;
-                }
             }
             
             timeString = Date_Picker.Text + " " + timeTextBox.Text;
@@ -84,9 +75,9 @@ namespace InventoryManagementSystem
                 {
                     companyID = machineTextBox.Text;
 
+                    add_part();
                     OutSourced source = new(id, name, instock, total, date, companyID);
                     Inventory.AddPart(source);
-                    add_part();
                 }
                 else
                 {
@@ -99,9 +90,10 @@ namespace InventoryManagementSystem
                 if (int.TryParse(machineTextBox.Text, out int machineID) && machineID > 0)
                 {
                     machine = machineID;
+
+                    add_part();
                     Inhouse homemade = new(id, name, instock, total, date, machine);
                     Inventory.AddPart(homemade);
-                    add_part();
                 }
                 else
                 {
@@ -136,54 +128,10 @@ namespace InventoryManagementSystem
             timeTextBox.Text = startTime.ToShortTimeString();
         }
 
-        private void nameComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            switch (nameComboBox.SelectedItem.ToString())
-            {
-                case "System.Windows.Controls.ComboBoxItem: Tungsten Ingots":
-
-                    idTextBox.Text = "65874";
-                    name = "Tungsten Ingots";
-                    break;
-
-                case "System.Windows.Controls.ComboBoxItem: Aluminum Alloy":
-
-                    idTextBox.Text = "24321";
-                    name = "Aluminum Alloy";
-                    break;
-
-                case "System.Windows.Controls.ComboBoxItem: Sand":
-
-                    name = "Sand";
-                    idTextBox.Text = "67326";
-                    break;
-
-                case "System.Windows.Controls.ComboBoxItem: Ballast":
-
-                    name = "Ballast";
-                    idTextBox.Text = "39512";
-                    break;
-
-                case "System.Windows.Controls.ComboBoxItem: Nickle Alloy":
-
-                    name = "Nickle Alloy";
-                    idTextBox.Text = "02839";
-                    break;
-
-                case "System.Windows.Controls.ComboBoxItem: White Phosphorus":
-
-                    name = "White Phosphorus";
-                    idTextBox.Text = "58165";
-                    break;
-
-                default:
-                    break;
-            }
-        }
-
         private void add_part()
         {
-            string userData = "INSERT INTO parts (part_id, part_name, quantity, unit_cost, created_on, machine_id, company_name) VALUES (@id, @name, @instock, @price, @date, @machine, @company)";
+            string userData = "INSERT INTO parts (part_name, quantity, unit_cost, created_on, machine_id, company_name) VALUES (@name, @instock, @price, @date, @machine, @company)";
+            MySqlCommand getPartId = new("SELECT part_id FROM parts ORDER BY part_id desc", connection);
 
             using (MySqlConnection con = new(connectionString))
             {
@@ -193,7 +141,6 @@ namespace InventoryManagementSystem
 
                     using (MySqlCommand cmd = new(userData, connection))
                     {
-                        cmd.Parameters.Add("@id", MySqlDbType.Int32).Value = id;
                         cmd.Parameters.Add("@name", MySqlDbType.VarChar).Value = name;
                         cmd.Parameters.Add("@instock", MySqlDbType.Decimal).Value = (decimal)instock;
                         cmd.Parameters.Add("@price", MySqlDbType.Decimal).Value = price;
@@ -209,7 +156,9 @@ namespace InventoryManagementSystem
                             cmd.Parameters.Add("@machine", MySqlDbType.Int32).Value = 0;
                             cmd.Parameters.Add("@company", MySqlDbType.VarChar).Value = companyID;
                         }
-                            cmd.ExecuteNonQuery();
+                        cmd.ExecuteNonQuery();
+
+                        id = (int)getPartId.ExecuteScalar();
                     }
                 }
                 catch (Exception ex)
