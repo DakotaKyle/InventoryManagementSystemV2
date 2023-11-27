@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.ComponentModel;
-using System.Windows.Controls;
 using InventoryManagementSystem.Models;
 using MySql.Data.MySqlClient;
 using System.Data;
@@ -12,17 +8,25 @@ using System.Windows;
 
 namespace InventoryManagementSystem.Database_Service
 {
+    /*
+     * This class is responsible for helping with database functions and performing mathmatical calculations related to inventory management.
+     */
     class Inventory
     {
-        public static BindingList<Part> allParts = new();
-        public static BindingList<Product> products = new();
-
+        public static BindingList<Part> allParts = new(); // A binding list for the part data table.
+        public static BindingList<Product> products = new(); // A binding list for the product data table.
+        /*
+         * Initialize the database connection.
+         */
         private static String connectionString = "Host=localhost;Port=3306;Database=duco_db;Username=root;Password=password";
         private MySqlConnection connection = new(connectionString);
         private int id;
 
         public void initPart()
         {
+            /*
+            * Populate the allParts binding list with data from the part data table.
+            */
             MySqlCommand partData = new("SELECT * FROM parts", connection);
             DataTable partTable = new();
 
@@ -72,24 +76,35 @@ namespace InventoryManagementSystem.Database_Service
             }
             finally { connection.Close(); }
         }
-
         public static decimal calculate_total(decimal cost, decimal units)
         {
+            /*
+             * Returns the total cost of a part or product.
+             */
             return cost * units;
         }
 
         public static decimal calculate_unit_price(decimal cost, decimal units)
         {
+            /*
+             * Returns the unit price of a part or product.
+             */
             return cost / units;
         }
 
         public static void AddPart(Part part)
         {
+            /*
+             * Adds parts to the allParts binding list.
+             */
             allParts.Add(part);
         }
 
         public static void DeletePart(Part part)
         {
+            /*
+             * Deletes parts from both the allParts binding list and the parts data table. 
+             */
             Inventory inv = new();
             inv.DeletePartFromDatabase(part);
             allParts.Remove(part);
@@ -97,6 +112,9 @@ namespace InventoryManagementSystem.Database_Service
 
         private void DeletePartFromDatabase(Part part)
         {
+            /*
+             * Deletes parts from the part data table.
+             */
             id = part.PartID;
             string deletePart = "DELETE FROM parts WHERE part_id=@partId";
 
@@ -113,6 +131,9 @@ namespace InventoryManagementSystem.Database_Service
 
         public static Part LookupPart(int partID)
         {
+            /*
+             * Searches for parts based on part ID.
+             */
             int i = 0;
 
             foreach (Part part in allParts)
@@ -125,18 +146,23 @@ namespace InventoryManagementSystem.Database_Service
 
                 i++;
             }
-
             return null;
         }
 
         public static void UpdatePart(int partID, Part part)
         {
+            /*
+             * Updates part based on part ID.
+             */
             LookupPart(partID);
             DeletePart(part);
         }
 
         public static void AddProduct(Product product)
         {
+            /*
+             * Adds product to the products binding list.
+             */
             products.Add(product);
         }
 
@@ -147,12 +173,18 @@ namespace InventoryManagementSystem.Database_Service
 
         public static bool removeProduct(Product product)
         {
+            /*
+             * Deletes product from products binding list.
+             */
             products.Remove(product);
             return true;
         }
 
         public static Product lookupProduct(int productID)
         {
+            /*
+             * Searches for product based on product ID.
+             */
             int i = 0;
 
             foreach (Product product in products)

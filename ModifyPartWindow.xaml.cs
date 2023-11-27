@@ -1,13 +1,9 @@
 ﻿using System;
-using System.ComponentModel.Design;
-using System.Reflection.PortableExecutable;
 using System.Windows;
 using System.Windows.Controls;
-using System.Xml.Linq;
 using InventoryManagementSystem.Database_Service;
 using InventoryManagementSystem.Models;
 using MySql.Data.MySqlClient;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace InventoryManagementSystem
 {
