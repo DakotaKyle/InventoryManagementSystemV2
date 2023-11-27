@@ -30,7 +30,10 @@ namespace InventoryManagementSystem
             idTextBox.Text = inhousePart.PartID.ToString();
             nameTextBox.Text = inhousePart.Name;
             inventoryTextBox.Text = inhousePart.Instock.ToString();
-            priceTextBox.Text = inhousePart.Price.ToString();
+
+            decimal unit_cost = Inventory.calculate_unit_price(inhousePart.Price, inhousePart.Instock);
+            priceTextBox.Text = unit_cost.ToString();
+
             Date_Picker.SelectedDate = inhousePart.ArrivedOn.Date;
             timeTextBox.Text = inhousePart.ArrivedOn.ToShortTimeString();
             machineTextBox.Text = inhousePart.InhousePart.ToString();
@@ -46,7 +49,10 @@ namespace InventoryManagementSystem
             idTextBox.Text = outsourcePart.PartID.ToString();
             nameTextBox.Text = outsourcePart.Name;
             inventoryTextBox.Text = outsourcePart.Instock.ToString();
-            priceTextBox.Text = outsourcePart.Price.ToString();
+
+            decimal unit_cost = Inventory.calculate_unit_price(outsourcePart.Price, outsourcePart.Instock);
+            priceTextBox.Text = unit_cost.ToString();
+
             Date_Picker.SelectedDate = outsourcePart.ArrivedOn.Date;
             timeTextBox.Text = outsourcePart.ArrivedOn.ToShortTimeString();
             machineTextBox.Text = outsourcePart.CompanyName;
@@ -107,7 +113,7 @@ namespace InventoryManagementSystem
                     companyID = machineTextBox.Text;
                     update_part();
                     Inventory.allParts.Remove(oldPart);
-                    OutSourced source = new(id, name, instock, price, date, companyID);
+                    OutSourced source = new(id, name, instock, total, date, companyID);
                     Inventory.AddPart(source);
                     }
                     else
@@ -123,7 +129,7 @@ namespace InventoryManagementSystem
                         machine = machineID;
                         update_part();
                         Inventory.allParts.Remove(oldPart);
-                        Inhouse homemade = new(id, name, instock, price, date, machine);
+                        Inhouse homemade = new(id, name, instock, total, date, machine);
                         Inventory.AddPart(homemade);
                         
                     }

@@ -78,6 +78,11 @@ namespace InventoryManagementSystem.Database_Service
             return cost * units;
         }
 
+        public static decimal calculate_unit_price(decimal cost, decimal units)
+        {
+            return cost / units;
+        }
+
         public static void AddPart(Part part)
         {
             allParts.Add(part);
