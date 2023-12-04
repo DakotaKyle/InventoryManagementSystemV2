@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using InventoryManagementSystem.Database_Service;
 using InventoryManagementSystem.Models;
+using MySql.Data.MySqlClient;
 
 namespace InventoryManagementSystem
 {
@@ -16,6 +17,16 @@ namespace InventoryManagementSystem
          */
 
         public BindingList<Part> NewParts = new(); // A temporary binding list for part data.
+
+        // Create the database connection
+        private static string connectionString = "Host=localhost;Port=3306;Database=duco_db;Username=root;Password=password";
+        private MySqlConnection connection = new(connectionString);
+
+        //Product fields
+        int id, instock;
+        string name, timeString;
+        decimal price;
+        DateTime date;
 
         public AddProductWindow()
         {
@@ -57,11 +68,6 @@ namespace InventoryManagementSystem
             /*
              * This method validates the fields, adds the product to the producting binding list as well as the product data table.
              */
-            int id, instock;
-            string name, timeString;
-            decimal price;
-            DateTime date;
-            id = 0;
 
             timeString = Date_Picker.Text + " " + timeTextBox.Text;
 
@@ -103,6 +109,8 @@ namespace InventoryManagementSystem
                 MessageBox.Show("Please pick a valid date and time.");
                 return;
             }
+
+            add_product(); //adds product to the products data table
 
             Product product = new(id, name, instock, price, date);
             Inventory.AddProduct(product); //adds product to the product binding list
@@ -180,6 +188,41 @@ namespace InventoryManagementSystem
              */
             DateTime startTime = Date_Picker.SelectedDate.Value.ToUniversalTime();
             timeTextBox.Text = startTime.ToShortTimeString();
+        }
+
+        private void add_product()
+        {
+            /*
+             * This method adds the new product to the product data table.
+             */
+
+            string productData = "INSERT INTO products (product_name, quantity, unit_cost, created_on) VALUES (@name, @count, @unit_cost, @created_on)";
+            MySqlCommand getProductId = new("SELECT product_id FROM products ORDER BY product_id desc", connection);
+
+            using (MySqlConnection con = new(connectionString))
+            {
+                try
+                {
+                    connection.Open();
+
+                    using (MySqlCommand cmd = new(productData, connection))
+                    {
+                        cmd.Parameters.Add("@name", MySqlDbType.VarChar).Value = name;
+                        cmd.Parameters.Add("@count", MySqlDbType.Decimal).Value = (decimal)instock;
+                        cmd.Parameters.Add("@unit_cost", MySqlDbType.Decimal).Value = price;
+                        cmd.Parameters.Add("@created_on", MySqlDbType.DateTime).Value = date;
+                        cmd.ExecuteNonQuery();
+
+                        id = (int)getProductId.ExecuteScalar();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message);
+                    connection.Dispose();
+                }
+                finally { connection.Close(); }
+            }
         }
     }
 }
