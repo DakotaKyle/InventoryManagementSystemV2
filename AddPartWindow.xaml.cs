@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Diagnostics.Metrics;
 using System.Windows;
 using System.Windows.Controls;
-using System.Xml.Linq;
 using InventoryManagementSystem.Database_Service;
 using InventoryManagementSystem.Models;
 using MySql.Data.MySqlClient;
@@ -11,8 +9,15 @@ namespace InventoryManagementSystem
 {
     public partial class AddPartWindow : Window
     {
+        /*
+         * This class is responsible for part validation, adding the new part to the part binding list, and adding the new part to the part data table.
+         */
+
+        // Create the database connection
         private static String connectionString = "Host=localhost;Port=3306;Database=duco_db;Username=root;Password=password";
         private MySqlConnection connection = new(connectionString);
+
+        // Part fields
         string name, companyID, timeString;
         int id, instock, machine;
         decimal price, total;
@@ -25,8 +30,10 @@ namespace InventoryManagementSystem
 
         private void saveButton_Click(object sender, RoutedEventArgs e)
         {
-
-            if (nameTextBox.Text.Length != 0)
+            /*
+             * This method is responsible for validating the new part as well as adding it to the respective bindling list and data table.
+             */
+            if (nameTextBox.Text.Length != 0) //Validates name
             {
                 name = nameTextBox.Text;
             }
@@ -38,11 +45,11 @@ namespace InventoryManagementSystem
             
             timeString = Date_Picker.Text + " " + timeTextBox.Text;
 
-            if (decimal.TryParse(priceTextBox.Text, out decimal priceVal) && priceVal > 0)
+            if (decimal.TryParse(priceTextBox.Text, out decimal priceVal) && priceVal > 0) //Validates part price
             {
                 price = priceVal;
 
-                if (int.TryParse(inventoryTextBox.Text, out int invVal) && (invVal >= 1))
+                if (int.TryParse(inventoryTextBox.Text, out int invVal) && (invVal >= 1))//Validates inventory counts
                 {
                     instock = invVal;
                     total = Inventory.calculate_total(instock, price);
@@ -59,7 +66,7 @@ namespace InventoryManagementSystem
                 return;
             }
 
-            if (DateTime.TryParse(timeString, out DateTime newTime))
+            if (DateTime.TryParse(timeString, out DateTime newTime))// Validates times
             {
                 date = newTime;
             }
@@ -69,15 +76,15 @@ namespace InventoryManagementSystem
                 return;
             }
 
-            if ((bool)outsourced.IsChecked)
+            if ((bool)outsourced.IsChecked) //Checks if the part is in house
             {
                 if (machineTextBox.Text.Length != 0)
                 {
                     companyID = machineTextBox.Text;
 
-                    add_part();
+                    add_part(); //Adds part to the part data table
                     OutSourced source = new(id, name, instock, total, date, companyID);
-                    Inventory.AddPart(source);
+                    Inventory.AddPart(source); //Adds part to the part bindling list
                 }
                 else
                 {
@@ -85,7 +92,7 @@ namespace InventoryManagementSystem
                     return;
                 }
             }
-            else if ((bool)inHouseButton.IsChecked)
+            else if ((bool)inHouseButton.IsChecked) //Checks if the part is out sourced
             {
                 if (int.TryParse(machineTextBox.Text, out int machineID) && machineID > 0)
                 {
@@ -108,7 +115,9 @@ namespace InventoryManagementSystem
 
         private void cancelButton_Click(object sender, RoutedEventArgs e)
         {
-
+            /*
+             * This method will close the window if the cancel button is clicked.
+             */
             MessageBoxResult messageBoxResult = MessageBox.Show("Are you sure you want to exit? Any unsaved progess will be lost.",
                 "", MessageBoxButton.YesNo);
 
@@ -124,12 +133,18 @@ namespace InventoryManagementSystem
 
         private void DatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
+            /*
+             * This method prepares the timeString for being added to the data table.
+             */
             DateTime startTime = Date_Picker.SelectedDate.Value.ToUniversalTime();
             timeTextBox.Text = startTime.ToShortTimeString();
         }
 
         private void add_part()
         {
+            /*
+             * This method adds the new part to the part data table.
+             */
             string userData = "INSERT INTO parts (part_name, quantity, unit_cost, created_on, machine_id, company_name) VALUES (@name, @instock, @price, @date, @machine, @company)";
             MySqlCommand getPartId = new("SELECT part_id FROM parts ORDER BY part_id desc", connection);
 

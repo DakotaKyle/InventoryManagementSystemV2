@@ -10,17 +10,27 @@ namespace InventoryManagementSystem
 
     public partial class AddProductWindow : Window
     {
-        public BindingList<Part> NewParts = new();
+        /*
+         * This class is responsible for product validation, adding the new product to the product binding list
+         * as well as the associated parts to the associated parts bindling list. Finally, it will add the new product to the product data table and associated parts data table.
+         */
+
+        public BindingList<Part> NewParts = new(); // A temporary binding list for part data.
 
         public AddProductWindow()
         {
+            /*
+             * Populate the parts datagrid.
+             */
             InitializeComponent();
-
             AllPartsDataGrid.ItemsSource = Inventory.allParts;
         }
 
         private void AllPartSearchButton_Click(object sender, RoutedEventArgs e)
         {
+            /*
+             * A search function for parts.
+             */
             if (int.TryParse(AllPartsTextBox.Text, out int search) && search >= 1)
             {
                 Part match = Inventory.LookupPart(search);
@@ -44,6 +54,9 @@ namespace InventoryManagementSystem
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
+            /*
+             * This method validates the fields, adds the product to the producting binding list as well as the product data table.
+             */
             int id, instock;
             string name, timeString;
             decimal price;
@@ -52,7 +65,7 @@ namespace InventoryManagementSystem
 
             timeString = Date_Picker.Text + " " + timeTextBox.Text;
 
-            if (NameTextBox.Text.Length != 0)
+            if (NameTextBox.Text.Length != 0) //validates name
             {
                 name = NameTextBox.Text;
             }
@@ -62,7 +75,7 @@ namespace InventoryManagementSystem
                 return;
             }
 
-            if (decimal.TryParse(PriceTextBox.Text, out decimal priceVal) && priceVal > 0)
+            if (decimal.TryParse(PriceTextBox.Text, out decimal priceVal) && priceVal > 0) // validates price
             {
                 price = priceVal;
             }
@@ -72,7 +85,7 @@ namespace InventoryManagementSystem
                 return;
             }
 
-            if (int.TryParse(InventoryTextBox.Text, out int invVal) && (invVal >= 1))
+            if (int.TryParse(InventoryTextBox.Text, out int invVal) && (invVal >= 1)) // validates inventory count
             {
                 instock = invVal;
             }
@@ -81,7 +94,7 @@ namespace InventoryManagementSystem
                 MessageBox.Show("Inventory field requires a positive whole number.");
                 return;
             }
-            if (DateTime.TryParse(timeString, out DateTime newTime))
+            if (DateTime.TryParse(timeString, out DateTime newTime)) //validates date
             {
                 date = newTime;
             }
@@ -92,11 +105,11 @@ namespace InventoryManagementSystem
             }
 
             Product product = new(id, name, instock, price, date);
-            Inventory.AddProduct(product);
+            Inventory.AddProduct(product); //adds product to the product binding list
 
-            foreach (Part part in NewParts)
+            foreach (Part part in NewParts) //adds each part to the associated part binding list
             {
-             //   product.addAssociatedPart(part);
+                product.addAssociatedPart(part);
             }
 
             MessageBox.Show("Product has been added to inventory.");
@@ -105,6 +118,9 @@ namespace InventoryManagementSystem
 
         private void AllPartsAddButton_Click(object sender, RoutedEventArgs e)
         {
+            /*
+             * This method adds the parts from the allparts datagrid to the prodcut datagrid
+             */
 
             if (AllPartsDataGrid.SelectedItem != null)
             {
@@ -122,6 +138,10 @@ namespace InventoryManagementSystem
         private void ProductDeleteButton_Click(object sender, RoutedEventArgs e)
         {
 
+            /*
+             * This method removes a part from the product datagrid.
+             */
+
             MessageBoxResult messageBoxResult = MessageBox.Show("Are you sure you want to delete this part from this product? " +
                 "This action cannot be undone.", "", MessageBoxButton.YesNo);
 
@@ -137,6 +157,9 @@ namespace InventoryManagementSystem
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
+            /*
+             * This method closes the current window.
+             */
             MessageBoxResult messageBoxResult = MessageBox.Show("Are you sure you want to exit? Any unsaved progess will be lost.",
                 "", MessageBoxButton.YesNo);
 
@@ -152,6 +175,9 @@ namespace InventoryManagementSystem
 
         private void DatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
+            /*
+             * This method prepares the timeString for being added to the data table.
+             */
             DateTime startTime = Date_Picker.SelectedDate.Value.ToUniversalTime();
             timeTextBox.Text = startTime.ToShortTimeString();
         }
