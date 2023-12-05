@@ -13,12 +13,16 @@ namespace InventoryManagementSystem
         public MainWindow()
         {
             InitializeComponent();
-
+            /*
+             * initialize all binding lists and populate the main screen datagrids.
+             */
             inv.initPart();
             inv.initProduct();
             PartDataGrid.ItemsSource = Inventory.allParts;
             ProductDataGrid.ItemsSource = Inventory.products;
-
+            /*
+             * Disable the main screen and load the login page.
+             */
             try
             {
                 while (!LoginPage.isvalid)
@@ -40,12 +44,16 @@ namespace InventoryManagementSystem
 
         private void AddPartButton_Click(object sender, RoutedEventArgs e)
         {
+            //Creates an add part button
             AddPartWindow newPart = new();
             newPart.ShowDialog();         
         }
 
         private void partSearchButton_Click(object sender, RoutedEventArgs e)
         {
+            /*
+             * A search function for parts.
+             */
             if (int.TryParse(partSeachField.Text, out int search) && search >= 1)
             {
                 Part match = Inventory.LookupPart(search);
@@ -69,6 +77,9 @@ namespace InventoryManagementSystem
 
         private void ProductSearchButton_Click(object sender, RoutedEventArgs e)
         {
+            /*
+             * A search function for products.
+             */
             if (int.TryParse(SearchProductField.Text, out int search) && search >= 1)
             {
                 Product match = Inventory.lookupProduct(search);
@@ -92,12 +103,14 @@ namespace InventoryManagementSystem
 
         private void AddProductButton_Click(object sender, RoutedEventArgs e)
         {
+            //an add product button
             AddProductWindow newProduct = new();
             newProduct.ShowDialog();
         }
 
         private void ProductModifyButton_Click(object sender, RoutedEventArgs e)
         {
+            //a modify product button. The next screen will not load if a product is not selected.
             if (ProductDataGrid.SelectedItem != null)
             {
                 Product modify = (Product)ProductDataGrid.SelectedItem;
@@ -113,6 +126,7 @@ namespace InventoryManagementSystem
 
         private void ProductDeleteButton_Click(object sender, RoutedEventArgs e)
         {
+            //This method deletes the product from the data table as long as no associated parts are attached.
             MessageBoxResult messageBoxResult = MessageBox.Show("Are you sure you want to delete this part? This action cannot be undone.",
                 "", MessageBoxButton.YesNo);
 
@@ -138,11 +152,13 @@ namespace InventoryManagementSystem
 
         private void ExitButton_Click(object sender, RoutedEventArgs e)
         {
+            //an exit button.
             Close();
         }
 
         private void DeletePartButton_Click(object sender, RoutedEventArgs e)
         {
+            //Deletes parts from inventory.
             MessageBoxResult messageBoxResult = MessageBox.Show("Are you sure you want to delete this part? This action cannot be undone.",
                 "", MessageBoxButton.YesNo);
 
@@ -158,6 +174,9 @@ namespace InventoryManagementSystem
 
         private void ModifyPartButton_Click(object sender, RoutedEventArgs e)
         {
+            /*
+             * This method will open the modify part scrren as long as a part is selected.
+             */
 
             if (PartDataGrid.SelectedItem != null)
             {
@@ -187,11 +206,13 @@ namespace InventoryManagementSystem
 
         private void PartSeachField_GotFocus(object sender, RoutedEventArgs e)
         {
+            //Clears the part field on focus
             partSeachField.Clear();
         }
 
         private void SearchProductField_GotFocus(object sender, RoutedEventArgs e)
         {
+            //Clears the product field on focus.
             SearchProductField.Clear();
         }
     }

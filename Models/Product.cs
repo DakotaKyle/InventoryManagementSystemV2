@@ -6,7 +6,7 @@ namespace InventoryManagementSystem.Models
 {
     public class Product
     {
-        public BindingList<Part> associatedPart = new();
+        public BindingList<Part> associatedPart = new(); // Each part that is associated with each product.
 
         public int ProductID { get; set; }
         public string Name { get; set; }
@@ -25,11 +25,14 @@ namespace InventoryManagementSystem.Models
 
         public void addAssociatedPart(Part part)
         {
-            associatedPart.Add(part);
+            associatedPart.Add(part); //add the part to the binding list.
         }
 
         public bool removeAssociatedPart(Part part)
         {
+            /*
+             * removes part from binding list.
+             */
             try
             {
                 associatedPart.Remove(part);
@@ -43,13 +46,11 @@ namespace InventoryManagementSystem.Models
 
         }
 
-        public bool removeAssociatedPart(int partID)
-        {
-            return true;
-        }
-
         public Part LookUpAssociatedPart(int partID)
         {
+            /*
+             * Searches part by ID.
+             */
             int i = 0;
 
             foreach (Part part in associatedPart)
