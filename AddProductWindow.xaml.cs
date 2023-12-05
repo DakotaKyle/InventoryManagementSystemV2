@@ -23,7 +23,7 @@ namespace InventoryManagementSystem
         private MySqlConnection connection = new(connectionString);
 
         //Product fields
-        int id, instock;
+        int productid, instock;
         string name, timeString;
         decimal price;
         DateTime date;
@@ -112,12 +112,13 @@ namespace InventoryManagementSystem
 
             add_product(); //adds product to the products data table
 
-            Product product = new(id, name, instock, price, date);
+            Product product = new(productid, name, instock, price, date);
             Inventory.AddProduct(product); //adds product to the product binding list
 
             foreach (Part part in NewParts) //adds each part to the associated part binding list
             {
                 product.addAssociatedPart(part);
+                add_associated_parts(part);
             }
 
             MessageBox.Show("Product has been added to inventory.");
@@ -213,7 +214,37 @@ namespace InventoryManagementSystem
                         cmd.Parameters.Add("@created_on", MySqlDbType.DateTime).Value = date;
                         cmd.ExecuteNonQuery();
 
-                        id = (int)getProductId.ExecuteScalar();
+                        productid = (int)getProductId.ExecuteScalar();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message);
+                    connection.Dispose();
+                }
+                finally { connection.Close(); }
+            }
+        }
+
+        private void add_associated_parts(Part part)
+        {
+            /*
+             * This method adds the new product's associated parts to the associated_parts data table.
+             */
+
+            string productData = "INSERT INTO associated_parts (product_id, part_id) VALUES (@product_id, @part_id)";
+
+            using (MySqlConnection con = new(connectionString))
+            {
+                try
+                {
+                    connection.Open();
+
+                    using (MySqlCommand cmd = new(productData, connection))
+                    {
+                        cmd.Parameters.Add("@product_id", MySqlDbType.VarChar).Value = productid;
+                        cmd.Parameters.Add("@part_id", MySqlDbType.Decimal).Value = part.PartID;
+                        cmd.ExecuteNonQuery();
                     }
                 }
                 catch (Exception ex)

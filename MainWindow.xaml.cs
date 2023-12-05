@@ -15,6 +15,7 @@ namespace InventoryManagementSystem
             InitializeComponent();
 
             inv.initPart();
+            inv.initProduct();
             PartDataGrid.ItemsSource = Inventory.allParts;
             ProductDataGrid.ItemsSource = Inventory.products;
 

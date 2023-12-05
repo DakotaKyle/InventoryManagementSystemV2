@@ -5,6 +5,8 @@ using InventoryManagementSystem.Models;
 using MySql.Data.MySqlClient;
 using System.Data;
 using System.Windows;
+using System.ComponentModel.Design;
+using System.Reflection.PortableExecutable;
 
 namespace InventoryManagementSystem.Database_Service
 {
@@ -76,6 +78,50 @@ namespace InventoryManagementSystem.Database_Service
             }
             finally { connection.Close(); }
         }
+
+        public void initProduct()
+        {
+            /*
+            * Populate the products binding list with data from the products data table.
+            */
+            MySqlCommand productData = new("SELECT * FROM products", connection);
+            DataTable productTable = new();
+
+            int productid, inventory;
+            int i = 0;
+            string name;
+            decimal price;
+            DateTime date;
+
+            try
+            {
+                connection.Open();
+                productTable.Load(productData.ExecuteReader());
+                connection.Close();
+
+                foreach (DataRow row in productTable.Rows)
+                {
+                    productid = (int)productTable.Rows[i]["product_id"];
+                    name = productTable.Rows[i]["product_name"].ToString();
+                    inventory = (int)(decimal)productTable.Rows[i]["quantity"];
+                    price = (decimal)productTable.Rows[i]["unit_cost"];
+                    date = (DateTime)productTable.Rows[i]["created_on"];
+
+                    decimal total = calculate_total(inventory, price);
+
+                    Product product = new(productid, name, inventory, price, date);
+                    AddProduct(product);
+                    i++;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex);
+                connection.Dispose();
+            }
+            finally { connection.Close(); }
+        }
+
         public static decimal calculate_total(decimal cost, decimal units)
         {
             /*
