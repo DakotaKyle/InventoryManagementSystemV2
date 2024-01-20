@@ -33,8 +33,7 @@
                    Content="All Parts"
                    FontFamily="Times New Roman"
                    FontSize="16"
-                   Margin="25,25,0,0"
->
+                   Margin="25,25,0,0">
 
             </Label>
 

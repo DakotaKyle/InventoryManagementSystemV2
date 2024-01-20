@@ -243,7 +243,7 @@ namespace InventoryManagementSystem
                     using (MySqlCommand cmd = new(productData, connection))
                     {
                         cmd.Parameters.Add("@product_id", MySqlDbType.VarChar).Value = productid;
-                        cmd.Parameters.Add("@part_id", MySqlDbType.Decimal).Value = part.PartID;
+                        cmd.Parameters.Add("@part_id", MySqlDbType.Int32).Value = part.PartID;
                         cmd.ExecuteNonQuery();
                     }
                 }

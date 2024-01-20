@@ -5,10 +5,14 @@ using InventoryManagementSystem.Models;
 
 namespace InventoryManagementSystem
 {
+    /*
+     * This class is responsible for ensuring user validation, initializing the part and product binding lists, and providing an interface to all other windows.
+     */
     public partial class MainWindow : Window
     {
         private static readonly LoginPage login = new();
         private Inventory inv = new();
+        private Product product = new();
 
         public MainWindow()
         {
@@ -114,7 +118,6 @@ namespace InventoryManagementSystem
             if (ProductDataGrid.SelectedItem != null)
             {
                 Product modify = (Product)ProductDataGrid.SelectedItem;
-
                 ModifyProductWindow modifyProduct = new(modify);
                 modifyProduct.ShowDialog();
             }

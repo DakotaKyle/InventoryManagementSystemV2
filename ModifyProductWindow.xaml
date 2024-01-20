@@ -166,9 +166,7 @@
 
                     <DataGridTextColumn Header="Part ID" FontFamily="Times New Roman" Width="75*" Binding="{Binding Path=PartID}"/>
                     <DataGridTextColumn Header="Name" FontFamily="Times New Roman" Width="75*" Binding="{Binding Path=Name}"/>
-                    <DataGridTextColumn Header="Inventory" FontFamily="Times New Roman" Width="95*" Binding="{Binding Path=Instock}"/>
                     <DataGridTextColumn Header="Price" FontFamily="Times New Roman" Width="75*" Binding="{Binding Path=Price}"/>
-                    <DataGridTextColumn Header="Date/Time" FontFamily="Times New Roman" Width="75*" Binding="{Binding Path=MadeOn}"/>
 
                 </DataGrid.Columns>
 
@@ -337,10 +335,27 @@
                 SelectedDateChanged="DatePicker_SelectedDateChanged">
 
             </DatePicker>
-            
-            
 
+            <Label x:Name="timeLabel"
+                   
+                   Content="At"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Left"
+                   FontFamily="Times New Roman"
+                   FontSize="14"
+                   Margin="50,20,0,0">
+
+            </Label>
+
+            <TextBox x:Name="timeTextBox"
+
+                TextWrapping="Wrap"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Left"
+                Width="120"
+                Margin="80,-25,0,0">
+
+            </TextBox>
         </StackPanel>
-
     </Grid>
 </Window>

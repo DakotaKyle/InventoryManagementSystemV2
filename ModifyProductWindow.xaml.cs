@@ -11,6 +11,7 @@ namespace InventoryManagementSystem
     {
         public BindingList<Part> NewParts = new();
         Product oldProduct;
+        Inventory inv = new();
 
         public ModifyProductWindow()
         {
@@ -24,6 +25,12 @@ namespace InventoryManagementSystem
             InitializeComponent();
             
             AllPartsDataGrid.ItemsSource = Inventory.allParts;
+
+            if (product.associatedPart.Count.Equals(0))
+            {
+                product.InitAsp(product);
+            }
+
             ProductDataGrid.ItemsSource = product.associatedPart;
 
             IdTextBox.Text = product.ProductID.ToString();
@@ -31,6 +38,7 @@ namespace InventoryManagementSystem
             InventoryTextBox.Text = product.Instock.ToString();
             PriceTextBox.Text = product.Price.ToString();
             Date_Picker.SelectedDate = product.MadeOn;
+            timeTextBox.Text = product.MadeOn.ToShortTimeString();
 
             oldProduct = product;
             NewParts = product.associatedPart;
@@ -100,9 +108,9 @@ namespace InventoryManagementSystem
 
             date = (DateTime)Date_Picker.SelectedDate;
 
-            Inventory.removeProduct(oldProduct);
+            
             Product product = new(id, name, instock, price, date);
-            Inventory.AddProduct(product);
+            inv.updateProduct(product, NewParts);
 
             foreach (Part part in NewParts)
             {
@@ -188,7 +196,7 @@ namespace InventoryManagementSystem
         private void DatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             DateTime startTime = Date_Picker.SelectedDate.Value.ToUniversalTime();
-            //StartTimeTextBox.Text = startTime.ToShortTimeString();
+            timeTextBox.Text = startTime.ToShortTimeString();
         }
     }
 }

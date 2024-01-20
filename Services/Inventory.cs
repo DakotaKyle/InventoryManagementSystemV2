@@ -5,8 +5,6 @@ using InventoryManagementSystem.Models;
 using MySql.Data.MySqlClient;
 using System.Data;
 using System.Windows;
-using System.ComponentModel.Design;
-using System.Reflection.PortableExecutable;
 
 namespace InventoryManagementSystem.Database_Service
 {
@@ -175,6 +173,21 @@ namespace InventoryManagementSystem.Database_Service
             connection.Close();
         }
 
+        private void DeleteProductFromDatabase(Product product)
+        {
+            id = product.ProductID;
+            string deleteProduct = "DELETE FROM products WHERE product_id=@productId";
+
+            connection.Open();
+
+            using (MySqlCommand cmd = new(deleteProduct, connection))
+            {
+                cmd.Parameters.Add("@productId", MySqlDbType.Int32).Value = id;
+                cmd.ExecuteNonQuery();
+            }
+            connection.Close();
+        }
+
         public static Part LookupPart(int partID)
         {
             /*
@@ -195,15 +208,6 @@ namespace InventoryManagementSystem.Database_Service
             return null;
         }
 
-        public static void UpdatePart(int partID, Part part)
-        {
-            /*
-             * Updates part based on part ID.
-             */
-            LookupPart(partID);
-            DeletePart(part);
-        }
-
         public static void AddProduct(Product product)
         {
             /*
@@ -212,16 +216,13 @@ namespace InventoryManagementSystem.Database_Service
             products.Add(product);
         }
 
-        public static bool removeProduct(int partID)
-        {
-            return true;
-        }
-
         public static bool removeProduct(Product product)
         {
             /*
              * Deletes product from products binding list.
              */
+            Inventory inv = new();
+            inv.DeleteProductFromDatabase(product);
             products.Remove(product);
             return true;
         }
@@ -244,10 +245,46 @@ namespace InventoryManagementSystem.Database_Service
             return null;
         }
 
-        public static void updateProduct(int productId, Product product)
+        public void updateProduct(Product product, BindingList<Part> parts)
         {
-            lookupProduct(productId);
-            removeProduct(product);
+            string updatePart = "INSERT INTO associated_parts (product_id, part_id) VALUES (@productid, @partid)";
+            MySqlCommand getIds = new("SELECT * FROM associated_parts", connection);
+            DataTable asTable = new();
+
+            connection.Open();
+
+            asTable.Load(getIds.ExecuteReader());
+
+            using (MySqlCommand cmd = new(updatePart, connection))
+            {
+                foreach (Part part in parts)
+                {
+                    if (!asTable.AsEnumerable().Any(row => row.Field<int>("part_id") == part.PartID))
+                    {
+                        cmd.Parameters.Clear();
+                        cmd.Parameters.Add("@productid", MySqlDbType.Int32).Value = product.ProductID;
+                        cmd.Parameters.Add("@partid", MySqlDbType.Int32).Value = part.PartID;
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+
+                string deletePart = "DELETE FROM associated_parts WHERE product_id = @productid AND part_id = @partid";
+
+                using (MySqlCommand command = new(deletePart, connection))
+                {
+                    foreach (DataRow row in asTable.Rows)
+                    {
+                        if (!parts.Any(part => part.PartID == row.Field<int>("part_id")))
+                        {
+                            command.Parameters.Clear();
+                            command.Parameters.Add("@productid", MySqlDbType.Int32).Value = product.ProductID;
+                            command.Parameters.Add("@partid", MySqlDbType.Int32).Value = row.Field<int>("part_id");
+                            command.ExecuteNonQuery();
+                        }
+                    }
+                }
+                connection.Close();
+            }
         }
     }
 }

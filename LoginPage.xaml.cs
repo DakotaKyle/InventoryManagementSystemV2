@@ -12,8 +12,12 @@ namespace InventoryManagementSystem
     /// </summary>
     public partial class LoginPage : Window
     {
+        /*
+         * Create the connection string.
+         */
         private static String connectionString = "Host=localhost;Port=3306;Database=duco_db;Username=root;Password=password";
         private MySqlConnection connection = new(connectionString);
+
         private string username, password;
         public static bool isvalid { get; set; }
 
@@ -24,7 +28,9 @@ namespace InventoryManagementSystem
 
         private void authenticate()
         {
-
+            /*
+             * Authenticates the username and password.
+             */
             int i = 0;
             DataTable userTable = new();
             String userName, Password;
@@ -32,6 +38,9 @@ namespace InventoryManagementSystem
 
             try
             {
+                /*
+                 * open the connection and load the data into the userTable for validation.
+                 */
                 connection.Open();
 
                 userTable.Load(userData.ExecuteReader());
@@ -66,6 +75,9 @@ namespace InventoryManagementSystem
 
         private void Loginbuton_Click(object sender, RoutedEventArgs e)
         {
+            /*
+             * Attempts to authenticate user when login button is clicked.
+             */
             username = UsernameTextbox.Text;
             password = PasswordBox.Password.ToString();
 
