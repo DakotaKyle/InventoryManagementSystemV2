@@ -167,7 +167,7 @@ namespace InventoryManagementSystem
 
             if (messageBoxResult == MessageBoxResult.Yes)
             {
-                Inventory.DeletePart((Part)PartDataGrid.SelectedItem);
+                inv.DeletePart((Part)PartDataGrid.SelectedItem);
             }
             else if (messageBoxResult == MessageBoxResult.No)
             {

@@ -111,6 +111,8 @@ namespace InventoryManagementSystem
             
             Product product = new(id, name, instock, price, date);
             inv.updateProduct(product, NewParts);
+            Inventory.products.Add(product);
+            Inventory.products.Remove(oldProduct);
 
             foreach (Part part in NewParts)
             {

@@ -24,92 +24,76 @@ namespace InventoryManagementSystem.Database_Service
 
         public void initPart()
         {
-            /*
-            * Populate the allParts binding list with data from the part data table.
-            */
-            MySqlCommand partData = new("SELECT * FROM parts", connection);
-            DataTable partTable = new();
-
-            string name, companyID;
-            int instock, machine;
-            int i = 0;
-            decimal price;
-            DateTime date;
-
             try
             {
-                connection.Open();
-                partTable.Load(partData.ExecuteReader());
-                connection.Close();
-
-                foreach (DataRow row in partTable.Rows)
+                using (MySqlCommand partData = new MySqlCommand("SELECT * FROM parts", connection))
                 {
-                    id = (int)partTable.Rows[i]["part_id"];
-                    name = partTable.Rows[i]["part_name"].ToString();
-                    instock = (int)(decimal)partTable.Rows[i]["quantity"];
-                    price = (decimal)partTable.Rows[i]["unit_cost"];
-                    date = (DateTime)partTable.Rows[i]["created_on"];
-
-                    decimal total = calculate_total(instock, price);
-
-                    if ((int)partTable.Rows[i]["machine_id"] != 0)
+                    using (DataTable partTable = new DataTable())
                     {
-                        machine = (int)partTable.Rows[i]["machine_id"];
-                        Inhouse homemade = new(id, name, instock, total, date, machine);
-                        AddPart(homemade);
-                    }
-                    else
-                    {
-                        companyID = partTable.Rows[i]["company_name"].ToString();
+                        connection.Open();
+                        partTable.Load(partData.ExecuteReader());
 
-                        OutSourced source = new(id, name, instock, total, date, companyID);
-                        AddPart(source);
-                    }
+                        foreach (DataRow row in partTable.Rows)
+                        {
+                            int id = (int)row["part_id"];
+                            string name = row["part_name"].ToString();
+                            int instock = (int)(decimal)row["quantity"];
+                            decimal price = (decimal)row["unit_cost"];
+                            DateTime date = (DateTime)row["created_on"];
 
-                    i++;
+                            decimal total = calculate_total(instock, price);
+
+                            if ((int)row["machine_id"] != 0)
+                            {
+                                int machine = (int)row["machine_id"];
+                                Inhouse homemade = new(id, name, instock, total, date, machine);
+                                AddPart(homemade);
+                            }
+                            else
+                            {
+                                string companyID = row["company_name"].ToString();
+                                OutSourced source = new(id, name, instock, total, date, companyID);
+                                AddPart(source);
+                            }
+                        }
+                    }
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Error: " + ex);
-                connection.Dispose();
             }
-            finally { connection.Close(); }
+            finally
+            {
+                connection.Close();
+            }
         }
 
         public void initProduct()
         {
-            /*
-            * Populate the products binding list with data from the products data table.
-            */
-            MySqlCommand productData = new("SELECT * FROM products", connection);
-            DataTable productTable = new();
-
-            int productid, inventory;
-            int i = 0;
-            string name;
-            decimal price;
-            DateTime date;
-
             try
             {
-                connection.Open();
-                productTable.Load(productData.ExecuteReader());
-                connection.Close();
-
-                foreach (DataRow row in productTable.Rows)
+                using (MySqlCommand productData = new MySqlCommand("SELECT * FROM products", connection))
                 {
-                    productid = (int)productTable.Rows[i]["product_id"];
-                    name = productTable.Rows[i]["product_name"].ToString();
-                    inventory = (int)(decimal)productTable.Rows[i]["quantity"];
-                    price = (decimal)productTable.Rows[i]["unit_cost"];
-                    date = (DateTime)productTable.Rows[i]["created_on"];
+                    using (DataTable productTable = new DataTable())
+                    {
+                        connection.Open();
+                        productTable.Load(productData.ExecuteReader());
 
-                    decimal total = calculate_total(inventory, price);
+                        foreach (DataRow row in productTable.Rows)
+                        {
+                            int productid = (int)row["product_id"];
+                            string name = row["product_name"].ToString();
+                            int inventory = (int)(decimal)row["quantity"];
+                            decimal price = (decimal)row["unit_cost"];
+                            DateTime date = (DateTime)row["created_on"];
 
-                    Product product = new(productid, name, inventory, price, date);
-                    AddProduct(product);
-                    i++;
+                            decimal total = calculate_total(inventory, price);
+
+                            Product product = new Product(productid, name, inventory, price, date);
+                            AddProduct(product);
+                        }
+                    }
                 }
             }
             catch (Exception ex)
@@ -117,7 +101,10 @@ namespace InventoryManagementSystem.Database_Service
                 MessageBox.Show("Error: " + ex);
                 connection.Dispose();
             }
-            finally { connection.Close(); }
+            finally
+            {
+                connection.Close();
+            }
         }
 
         public static decimal calculate_total(decimal cost, decimal units)
@@ -144,33 +131,32 @@ namespace InventoryManagementSystem.Database_Service
             allParts.Add(part);
         }
 
-        public static void DeletePart(Part part)
+        public void DeletePart(Part part)
         {
             /*
              * Deletes parts from both the allParts binding list and the parts data table. 
              */
-            Inventory inv = new();
-            inv.DeletePartFromDatabase(part);
-            allParts.Remove(part);
-        }
-
-        private void DeletePartFromDatabase(Part part)
-        {
-            /*
-             * Deletes parts from the part data table.
-             */
-            id = part.PartID;
-            string deletePart = "DELETE FROM parts WHERE part_id=@partId";
-
-            connection.Open();
-
-            using (MySqlCommand cmd = new(deletePart, connection))
+            try
             {
-                cmd.Parameters.Add("@partId", MySqlDbType.Int32).Value = id;
-                cmd.ExecuteNonQuery();
-            }
+                id = part.PartID;
+                string deletePart = "DELETE FROM parts WHERE part_id=@partId";
 
-            connection.Close();
+                connection.Open();
+
+                using (MySqlCommand cmd = new(deletePart, connection))
+                {
+                    cmd.Parameters.Add("@partId", MySqlDbType.Int32).Value = id;
+                    cmd.ExecuteNonQuery();
+                }
+
+                connection.Close();
+                allParts.Remove(part);
+            }
+            catch (MySqlException)
+            {
+                MessageBox.Show("Part cannot be deleted while being assigned to a product.");
+                connection.Dispose();
+            }
         }
 
         private void DeleteProductFromDatabase(Product product)
@@ -193,19 +179,7 @@ namespace InventoryManagementSystem.Database_Service
             /*
              * Searches for parts based on part ID.
              */
-            int i = 0;
-
-            foreach (Part part in allParts)
-            {
-
-                if (part.PartID == partID)
-                {
-                    return allParts.ElementAt(i);
-                }
-
-                i++;
-            }
-            return null;
+            return allParts.FirstOrDefault(part => part.PartID == partID);
         }
 
         public static void AddProduct(Product product)
@@ -232,22 +206,16 @@ namespace InventoryManagementSystem.Database_Service
             /*
              * Searches for product based on product ID.
              */
-            int i = 0;
-
-            foreach (Product product in products)
-            {
-                if (product.ProductID == productID)
-                {
-                    return products.ElementAt(i);
-                }
-            }
-
-            return null;
+            return products.FirstOrDefault(product => product.ProductID == productID);
         }
 
         public void updateProduct(Product product, BindingList<Part> parts)
         {
+            /*
+             * This function updates the product table as well as the associated_part junction table.
+             */
             string updatePart = "INSERT INTO associated_parts (product_id, part_id) VALUES (@productid, @partid)";
+            string deletePart = "DELETE FROM associated_parts WHERE product_id = @productid AND part_id = @partid";
             MySqlCommand getIds = new("SELECT * FROM associated_parts", connection);
             DataTable asTable = new();
 
@@ -255,10 +223,13 @@ namespace InventoryManagementSystem.Database_Service
 
             asTable.Load(getIds.ExecuteReader());
 
-            using (MySqlCommand cmd = new(updatePart, connection))
+            using (MySqlCommand cmd = new(updatePart, connection))//start by inserting new associated parts if they were added.
             {
                 foreach (Part part in parts)
                 {
+                    /*
+                     * If any part ids passed in the parameter do not match the part ids already in the junction table, then the new part needs to be added to the table.
+                     */
                     if (!asTable.AsEnumerable().Any(row => row.Field<int>("part_id") == part.PartID))
                     {
                         cmd.Parameters.Clear();
@@ -268,10 +239,11 @@ namespace InventoryManagementSystem.Database_Service
                     }
                 }
 
-                string deletePart = "DELETE FROM associated_parts WHERE product_id = @productid AND part_id = @partid";
-
                 using (MySqlCommand command = new(deletePart, connection))
                 {
+                    /*
+                     * If the junction table contains a partId that was not passed as a parameter, then the part needs to be deleted from the table.
+                     */
                     foreach (DataRow row in asTable.Rows)
                     {
                         if (!parts.Any(part => part.PartID == row.Field<int>("part_id")))
