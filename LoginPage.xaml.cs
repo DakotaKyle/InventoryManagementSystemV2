@@ -1,7 +1,8 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
 using System.Data;
-using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -31,10 +32,9 @@ namespace InventoryManagementSystem
             /*
              * Authenticates the username and password.
              */
-            int i = 0;
             DataTable userTable = new();
-            String userName, Password;
-            MySqlCommand userData = new("SELECT user_name, users_password FROM users", connection);
+            String userName, Password, Salt;
+            MySqlCommand userData = new("SELECT user_name, users_password, salt FROM users", connection);
 
             try
             {
@@ -47,17 +47,29 @@ namespace InventoryManagementSystem
 
                 connection.Close();
 
-                foreach (DataRow row in userTable.Select().Where(e => e.ToString().Any()))//Lamba expression to get username and passwords from the data table.
+                foreach (DataRow row in userTable.Rows)
                 {
-                    userName = userTable.Rows[i]["user_name"].ToString();
-                    Password = userTable.Rows[i]["users_password"].ToString();
+                    userName = row["user_name"].ToString();
+                    Password = row["users_password"].ToString();
+                    Salt = row["salt"].ToString();
+
+                    // Hash the provided password with the retrieved salt
+                    using (SHA256 sha256Hash = SHA256.Create())
+                    {
+                        byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(password + Salt));
+                        StringBuilder builder = new StringBuilder();
+                        for (int i = 0; i < bytes.Length; i++)
+                        {
+                            builder.Append(bytes[i].ToString("x2"));
+                        }
+                        password = builder.ToString();
+                    }
 
                     if (username == userName && password == Password)
                     {
                         isvalid = true;
                         return;
                     }
-                    i++;
                 }
 
                 if (!isvalid)
@@ -70,7 +82,10 @@ namespace InventoryManagementSystem
                 MessageBox.Show("Error: " + ex);
                 connection.Dispose();
             }
-            finally { connection.Close(); }
+            finally
+            {
+                connection.Close();
+            }
         }
 
         private void Loginbuton_Click(object sender, RoutedEventArgs e)

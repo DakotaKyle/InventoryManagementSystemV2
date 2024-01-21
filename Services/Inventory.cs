@@ -220,7 +220,7 @@ namespace InventoryManagementSystem.Database_Service
             MySqlCommand getIds = new("SELECT * FROM associated_parts", connection);
             DataTable asTable = new();
 
-            connection.Open();
+            connection.Open(); 
 
             asTable.Load(getIds.ExecuteReader());
 
