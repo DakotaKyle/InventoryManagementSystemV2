@@ -216,6 +216,7 @@ namespace InventoryManagementSystem.Database_Service
              */
             string updatePart = "INSERT INTO associated_parts (product_id, part_id) VALUES (@productid, @partid)";
             string deletePart = "DELETE FROM associated_parts WHERE product_id = @productid AND part_id = @partid";
+            string updateProduct = "UPDATE products SET product_name = @productname, quantity = @quantity, unit_cost = @unitcost, created_on = @created";
             MySqlCommand getIds = new("SELECT * FROM associated_parts", connection);
             DataTable asTable = new();
 
@@ -255,8 +256,37 @@ namespace InventoryManagementSystem.Database_Service
                         }
                     }
                 }
-                connection.Close();
+
+                using (MySqlCommand update = new(updateProduct, connection))
+                {
+                    // Fetch current product details from the database
+                    MySqlCommand fetchCurrentProduct = new MySqlCommand("SELECT * FROM products WHERE product_id = @productid", connection);
+                    fetchCurrentProduct.Parameters.Add("@productid", MySqlDbType.Int32).Value = product.ProductID;
+                    MySqlDataReader reader = fetchCurrentProduct.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        string currentProductName = reader["product_name"].ToString();
+                        int currentQuantity = Convert.ToInt32(reader["quantity"]);
+                        decimal currentUnitCost = Convert.ToDecimal(reader["unit_cost"]);
+                        DateTime currentCreatedOn = Convert.ToDateTime(reader["created_on"]);
+
+                        // Compare current product details with new values
+                        if (currentProductName != product.Name || currentQuantity != product.Instock || currentUnitCost != product.Price || currentCreatedOn != product.MadeOn)
+                        {
+                            reader.Close();
+                            // If they are different, proceed with the update
+                            update.Parameters.Clear();
+                            update.Parameters.Add("@productname", MySqlDbType.VarChar).Value = product.Name;
+                            update.Parameters.Add("@quantity", MySqlDbType.Int32).Value = product.Instock;
+                            update.Parameters.Add("@unitcost", MySqlDbType.Decimal).Value = product.Price;
+                            update.Parameters.Add("@created", MySqlDbType.DateTime).Value = product.MadeOn;
+                            update.ExecuteNonQuery();
+                        }
+                    }
+                }
             }
+                connection.Close();
         }
     }
 }
