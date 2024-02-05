@@ -26,9 +26,7 @@ namespace InventoryManagementSystem
             idTextBox.Text = inhousePart.PartID.ToString();
             nameTextBox.Text = inhousePart.Name;
             inventoryTextBox.Text = inhousePart.Instock.ToString();
-
-            decimal unit_cost = Inventory.calculate_unit_price(inhousePart.Price, inhousePart.Instock);
-            priceTextBox.Text = unit_cost.ToString();
+            priceTextBox.Text = inhousePart.Price.ToString();
 
             Date_Picker.SelectedDate = inhousePart.ArrivedOn.Date;
             timeTextBox.Text = inhousePart.ArrivedOn.ToShortTimeString();
@@ -46,8 +44,7 @@ namespace InventoryManagementSystem
             nameTextBox.Text = outsourcePart.Name;
             inventoryTextBox.Text = outsourcePart.Instock.ToString();
 
-            decimal unit_cost = Inventory.calculate_unit_price(outsourcePart.Price, outsourcePart.Instock);
-            priceTextBox.Text = unit_cost.ToString();
+            priceTextBox.Text = outsourcePart.Price.ToString();
 
             Date_Picker.SelectedDate = outsourcePart.ArrivedOn.Date;
             timeTextBox.Text = outsourcePart.ArrivedOn.ToShortTimeString();

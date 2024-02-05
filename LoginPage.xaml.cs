@@ -16,7 +16,7 @@ namespace InventoryManagementSystem
         /*
          * Create the connection string.
          */
-        private static String connectionString = "Host=localhost;Port=3306;Database=duco_db;Username=root;Password=password";
+        private static string connectionString = "Host=localhost;Port=3306;Database=duco_db;Username=root;Password=password";
         private MySqlConnection connection = new(connectionString);
 
         private string username, password;
@@ -33,7 +33,7 @@ namespace InventoryManagementSystem
              * Authenticates the username and password.
              */
             DataTable userTable = new();
-            String userName, Password, Salt;
+            string userName, Password, Salt;
             MySqlCommand userData = new("SELECT user_name, users_password, salt FROM users", connection);
 
             try
@@ -44,8 +44,6 @@ namespace InventoryManagementSystem
                 connection.Open();
 
                 userTable.Load(userData.ExecuteReader());
-
-                connection.Close();
 
                 foreach (DataRow row in userTable.Rows)
                 {
@@ -80,7 +78,6 @@ namespace InventoryManagementSystem
             catch (Exception ex)
             {
                 MessageBox.Show("Error: " + ex);
-                connection.Dispose();
             }
             finally
             {

@@ -41,18 +41,16 @@ namespace InventoryManagementSystem.Database_Service
                             decimal price = (decimal)row["unit_cost"];
                             DateTime date = (DateTime)row["created_on"];
 
-                            decimal total = calculate_total(instock, price);
-
                             if ((int)row["machine_id"] != 0)
                             {
                                 int machine = (int)row["machine_id"];
-                                Inhouse homemade = new(id, name, instock, total, date, machine);
+                                Inhouse homemade = new(id, name, instock, price, date, machine);
                                 AddPart(homemade);
                             }
                             else
                             {
                                 string companyID = row["company_name"].ToString();
-                                OutSourced source = new(id, name, instock, total, date, companyID);
+                                OutSourced source = new(id, name, instock, price, date, companyID);
                                 AddPart(source);
                             }
                         }
@@ -148,30 +146,42 @@ namespace InventoryManagementSystem.Database_Service
                     cmd.Parameters.Add("@partId", MySqlDbType.Int32).Value = id;
                     cmd.ExecuteNonQuery();
                 }
-
-                connection.Close();
                 allParts.Remove(part);
             }
             catch (MySqlException)
             {
                 MessageBox.Show("Part cannot be deleted while being assigned to a product.");
-                connection.Dispose();
+            }
+            finally
+            {
+                connection.Close();
             }
         }
 
         private void DeleteProductFromDatabase(Product product)
         {
-            id = product.ProductID;
-            string deleteProduct = "DELETE FROM products WHERE product_id=@productId";
-
-            connection.Open();
-
-            using (MySqlCommand cmd = new(deleteProduct, connection))
+            try
             {
-                cmd.Parameters.Add("@productId", MySqlDbType.Int32).Value = id;
-                cmd.ExecuteNonQuery();
+                id = product.ProductID;
+                string deleteProduct = "DELETE FROM products WHERE product_id=@productId";
+
+                connection.Open();
+
+                using (MySqlCommand cmd = new(deleteProduct, connection))
+                {
+                    cmd.Parameters.Add("@productId", MySqlDbType.Int32).Value = id;
+                    cmd.ExecuteNonQuery();
+                }
+                products.Remove(product);
             }
-            connection.Close();
+            catch (MySqlException)
+            {
+                MessageBox.Show("Product cannot be deleted with parts allocated to it. Modify the product to not have any parts then try to delete again.");
+            }
+            finally
+            {
+                connection.Close();
+            }
         }
 
         public static Part LookupPart(int partID)
@@ -197,7 +207,6 @@ namespace InventoryManagementSystem.Database_Service
              */
             Inventory inv = new();
             inv.DeleteProductFromDatabase(product);
-            products.Remove(product);
             return true;
         }
 
@@ -216,7 +225,7 @@ namespace InventoryManagementSystem.Database_Service
              */
             string updatePart = "INSERT INTO associated_parts (product_id, part_id) VALUES (@productid, @partid)";
             string deletePart = "DELETE FROM associated_parts WHERE product_id = @productid AND part_id = @partid";
-            string updateProduct = "UPDATE products SET product_name = @productname, quantity = @quantity, unit_cost = @unitcost, created_on = @created";
+            string updateProduct = "UPDATE products SET product_name = @productname, quantity = @quantity, unit_cost = @unitcost, created_on = @created WHERE   product_id = @productid";
             MySqlCommand getIds = new("SELECT * FROM associated_parts", connection);
             DataTable asTable = new();
 
@@ -281,6 +290,7 @@ namespace InventoryManagementSystem.Database_Service
                             update.Parameters.Add("@quantity", MySqlDbType.Int32).Value = product.Instock;
                             update.Parameters.Add("@unitcost", MySqlDbType.Decimal).Value = product.Price;
                             update.Parameters.Add("@created", MySqlDbType.DateTime).Value = product.MadeOn;
+                            update.Parameters.Add("@productid", MySqlDbType.Int32).Value = product.ProductID;
                             update.ExecuteNonQuery();
                         }
                     }

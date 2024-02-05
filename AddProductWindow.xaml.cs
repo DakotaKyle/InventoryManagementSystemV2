@@ -134,7 +134,6 @@ namespace InventoryManagementSystem
             if (AllPartsDataGrid.SelectedItem != null)
             {
                 Part addPart = (Part)AllPartsDataGrid.SelectedItem;
-                addPart.Price /= addPart.Instock;
                 NewParts.Add(addPart);
 
                 ProductDataGrid.ItemsSource = NewParts; 
@@ -201,29 +200,30 @@ namespace InventoryManagementSystem
             string productData = "INSERT INTO products (product_name, quantity, unit_cost, created_on) VALUES (@name, @count, @unit_cost, @created_on)";
             MySqlCommand getProductId = new("SELECT product_id FROM products ORDER BY product_id desc", connection);
 
-            using (MySqlConnection con = new(connectionString))
+            using MySqlConnection con = new(connectionString);
+            try
             {
-                try
-                {
-                    connection.Open();
+                connection.Open();
 
-                    using (MySqlCommand cmd = new(productData, connection))
-                    {
-                        cmd.Parameters.Add("@name", MySqlDbType.VarChar).Value = name;
-                        cmd.Parameters.Add("@count", MySqlDbType.Decimal).Value = (decimal)instock;
-                        cmd.Parameters.Add("@unit_cost", MySqlDbType.Decimal).Value = price;
-                        cmd.Parameters.Add("@created_on", MySqlDbType.DateTime).Value = date;
-                        cmd.ExecuteNonQuery();
-
-                        productid = (int)getProductId.ExecuteScalar();
-                    }
-                }
-                catch (Exception ex)
+                using (MySqlCommand cmd = new(productData, connection))
                 {
-                    MessageBox.Show("Error: " + ex.Message);
-                    connection.Dispose();
+                    cmd.Parameters.Add("@name", MySqlDbType.VarChar).Value = name;
+                    cmd.Parameters.Add("@count", MySqlDbType.Decimal).Value = (decimal)instock;
+                    cmd.Parameters.Add("@unit_cost", MySqlDbType.Decimal).Value = price;
+                    cmd.Parameters.Add("@created_on", MySqlDbType.DateTime).Value = date;
+                    cmd.ExecuteNonQuery();
+
+                    productid = (int)getProductId.ExecuteScalar();
                 }
-                finally { connection.Close(); }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+                connection.Dispose();
+            }
+            finally
+            {
+                connection.Close();
             }
         }
 
@@ -253,7 +253,10 @@ namespace InventoryManagementSystem
                     MessageBox.Show("Error: " + ex.Message);
                     connection.Dispose();
                 }
-                finally { connection.Close(); }
+                finally
+                {
+                    connection.Close();
+                }
             }
         }
     }

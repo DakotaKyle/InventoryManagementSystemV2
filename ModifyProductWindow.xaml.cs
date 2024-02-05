@@ -129,6 +129,7 @@ namespace InventoryManagementSystem
             if (AllPartsDataGrid.SelectedItem != null)
             {
                 Part addPart = ((Part)AllPartsDataGrid.SelectedItem);
+                
                 NewParts.Add(addPart);
 
                 ProductDataGrid.ItemsSource = NewParts;

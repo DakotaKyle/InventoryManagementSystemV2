@@ -52,7 +52,6 @@ namespace InventoryManagementSystem
                 if (int.TryParse(inventoryTextBox.Text, out int invVal) && (invVal >= 1))//Validates inventory counts
                 {
                     instock = invVal;
-                    total = Inventory.calculate_total(instock, price);
                 }
                 else
                 {
@@ -83,7 +82,7 @@ namespace InventoryManagementSystem
                     companyID = machineTextBox.Text;
 
                     add_part(); //Adds part to the part data table
-                    OutSourced source = new(id, name, instock, total, date, companyID);
+                    OutSourced source = new(id, name, instock, price, date, companyID);
                     Inventory.AddPart(source); //Adds part to the part bindling list
                 }
                 else
@@ -99,7 +98,7 @@ namespace InventoryManagementSystem
                     machine = machineID;
 
                     add_part();
-                    Inhouse homemade = new(id, name, instock, total, date, machine);
+                    Inhouse homemade = new(id, name, instock, price, date, machine);
                     Inventory.AddPart(homemade);
                 }
                 else

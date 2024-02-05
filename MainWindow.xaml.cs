@@ -218,5 +218,12 @@ namespace InventoryManagementSystem
             //Clears the product field on focus.
             SearchProductField.Clear();
         }
+
+        private void Report_Button_Click(object sender, RoutedEventArgs e)
+        {
+            //opens the report page.
+            ReportWindow reports = new();
+            reports.ShowDialog();
+        }
     }
 }
